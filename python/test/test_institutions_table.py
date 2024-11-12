@@ -9,6 +9,7 @@ import threading
 
 import pytest
 import requests
+from warnings import warn
 
 from .test_apc_csv import RowObject, DATA_FILES
 
@@ -23,15 +24,24 @@ DATA = {
     "translation_institution_types": []
 }
 
-# List of all institution identifiers in the APC data set (as strings)
-APC_INSTITUTIONS = []
+# List of all OpenAPC institutional identifiers (as strings)
+INSTITUTIONS = []
 
-# Holds all currently active URLRequestThreads
+# List of all institutional identifiers (as strings) in the apc_de file
+INSTITUTIONS_APC_DE = []
+
+# List of all ROR IDs
+ROR_IDS = []
+
+# Holds all currently active Threads
 THREAD_POOL = []
 # Maximum number of parallel threads
-THREAD_POOL_SIZE = 10
+THREAD_POOL_SIZE = 15
 
-FINISHED_THREADS = []
+FINISHED_THREADS = {
+    "URLRequestThread": [],
+    "RORRequestThread": []
+}
 
 # Prefix for all error messages
 MSG_HEAD = "{}, line {}: "
@@ -55,16 +65,44 @@ class URLRequestThread(threading.Thread):
 
     def __init__(self, row_object):
         # assigning a name is not strictly necessary, but can useful for debugging purposes
-        super().__init__(name = row_object.row[1] + "_thread")
+        super().__init__(name = row_object.row[1] + "_url_request_thread")
         self.row_object = row_object
         self.url = row_object.row[10]
         self.status_code = None
+        self.error_msg = None
 
     def run(self):
-        response = requests.get(self.url, timeout=10, headers=URLRequestThread.headers)
-        # Are there other codes besides 200 which indicate a success? Wait and see.
-        if response.status_code != 200:
-            self.status_code = response.status_code
+        try:
+            response = requests.get(self.url, timeout=10, headers=URLRequestThread.headers)
+            if response.status_code != 200:
+                self.status_code = response.status_code
+                # Are there other codes besides 200 which indicate a success? Wait and see.
+        except Exception as e:
+            self.error_msg = str(e)
+
+class RORRequestThread(threading.Thread):
+    """
+    Make a threaded request to the ROR Api to test if the ROR ID exists
+
+    Args:
+        row_object: A test_apc_csv.RowObject which encapsulates information
+        on a single row from the institutions table.
+    """
+
+    def __init__(self, row_object):
+        # assigning a name is not strictly necessary, but can useful for debugging purposes
+        super().__init__(name = row_object.row[1] + "_ror_request_thread")
+        self.row_object = row_object
+        self.ror_id = row_object.row[7]
+        self.success = None
+        self.error_msg = None
+
+    def run(self):
+        try:
+            response = oat.get_metadata_from_ror(self.ror_id)
+            self.success = response["success"]
+        except Exception as e:
+            self.error_msg = str(e)
 
 def _cleanup_thread_pool():
     """
@@ -79,13 +117,12 @@ def _cleanup_thread_pool():
         if thread.is_alive():
             still_running.append(thread)
         else:
-            FINISHED_THREADS.append(thread)
+            FINISHED_THREADS[type(thread).__name__].append(thread)
     THREAD_POOL = still_running
-
 
 def run_url_threads():
     """
-    Create parallel URLRequestThreads for all info_urls and start them.
+    Create parallel URLRequestThreads/RORRequestThreads and start them.
 
     Fill up the THREAD_POOL with threads, then clean them up in regular
     intervals and add new ones whenever there's room.
@@ -99,25 +136,36 @@ def run_url_threads():
     """
     global THREAD_POOL
     for row_object in DATA["institutions"]:
+        threads_waiting = []
         if oat.has_value(row_object.row[10]):
-            thread = URLRequestThread(row_object)
-            while len(THREAD_POOL) >= THREAD_POOL_SIZE:
-                _cleanup_thread_pool()
-                time.sleep(0.2)
+            threads_waiting.append(URLRequestThread(row_object))
+        if oat.has_value(row_object.row[7]):
+            threads_waiting.append(RORRequestThread(row_object))
+        while len(THREAD_POOL) > THREAD_POOL_SIZE - 1:
+            _cleanup_thread_pool()
+            time.sleep(0.2)
+        for thread in threads_waiting:
             THREAD_POOL.append(thread)
             thread.start()
     # Wait until all threads have finished
     while len(THREAD_POOL) > 0:
         _cleanup_thread_pool()
         time.sleep(0.2)
+    for rrt in FINISHED_THREADS["RORRequestThread"]:
+        print(rrt.success)
 
 # Prepare the test data
-with open(DATA_FILES["apc"]["file_path"], "r") as f:
-    reader = csv.reader(f)
-    reader.__next__() # skip the header
-    for row in reader:
-        if row[0] not in APC_INSTITUTIONS:
-            APC_INSTITUTIONS.append(row[0])
+for data_file, metadata in DATA_FILES.items():
+    if metadata["is_ac_file_for"] is not None:
+        continue
+    with open(metadata["file_path"], "r") as f:
+        reader = csv.reader(f)
+        reader.__next__() # skip the header
+        for row in reader:
+            if row[0] not in INSTITUTIONS:
+                INSTITUTIONS.append(row[0])
+            if data_file == "apc" and row[0] not in INSTITUTIONS_APC_DE:
+                INSTITUTIONS_APC_DE.append(row[0])
 for base_name, data in DATA.items():
     file_path = os.path.join("data", base_name + ".csv")
     with open(file_path, "r") as f:
@@ -145,24 +193,52 @@ def test_data_dirs(row_object):
             msg = msg.format(row_object.file_name, row_object.line_number, data_dir)
             pytest.fail(msg)
 
-@pytest.mark.parametrize("thread", FINISHED_THREADS)
+@pytest.mark.parametrize("thread", FINISHED_THREADS["URLRequestThread"])
 def test_info_urls(thread):
     if thread.status_code is not None:
         msg = MSG_HEAD + "HTTP request to '{}' returned status code {}"
         msg = msg.format(thread.row_object.file_name, thread.row_object.line_number, thread.url, thread.status_code)
+        warn(msg)
+    elif thread.error_msg is not None:
+        msg = MSG_HEAD + "HTTP request to '{}' led to an exception: {}"
+        msg = msg.format(thread.row_object.file_name, thread.row_object.line_number, thread.url, thread.error_msg)
+        warn(msg)
+
+@pytest.mark.parametrize("thread", FINISHED_THREADS["RORRequestThread"])
+def test_ror_ids(thread):
+    if not thread.success:
+        msg = MSG_HEAD + "Unable to resolve ROR ID '{}'"
+        msg = msg.format(thread.row_object.file_name, thread.row_object.line_number, thread.ror_id)
+        warn(msg)
+    elif thread.error_msg is not None:
+        msg = MSG_HEAD + "Querying ROR ID '{}' led to an exception: {}"
+        msg = msg.format(thread.row_object.file_name, thread.row_object.line_number, thread.ror_id, thread.error_msg)
+        warn(msg)
+
+@pytest.mark.parametrize("row_object", DATA["institutions"])
+def test_cubes_names(row_object):
+    institution = row_object.row[0]
+    cubes_name = row_object.row[1]
+    if not oat.has_value(cubes_name):
+        msg = MSG_HEAD + "Institution '{}' does not have a cubes name."
+        msg = msg.format(row_object.file_name, row_object.line_number, institution)
+        pytest.fail(msg)
+    elif re.compile(r"\s").search(cubes_name):
+        msg = MSG_HEAD + "Cube name '{}' contains whitespace characters."
+        msg = msg.format(row_object.file_name, row_object.line_number, cubes_name)
         pytest.fail(msg)
 
 @pytest.mark.parametrize("row_object", DATA["institutions"])
-def test_cube_names(row_object):
-    cube_name = row_object.row[1]
-    if not oat.has_value(cube_name):
-        msg = MSG_HEAD + "Cube name is empty."
-        msg = msg.format(row_object.file_name, row_object.line_number)
-        pytest.fail(msg)
-    if re.compile(r"\s").search(cube_name):
-        msg = MSG_HEAD + "Cube name '{}' contains whitespace characters."
-        msg = msg.format(row_object.file_name, row_object.line_number, cube_name)
-        pytest.fail(msg)
+def test_ror_duplicates(row_object):
+    global ROR_IDS
+    ror_id = row_object.row[7]
+    if oat.has_value(ror_id):
+        if ror_id not in ROR_IDS:
+            ROR_IDS.append(ror_id)
+        else:
+            msg = MSG_HEAD + "ROR ID '{}' occurs more than once."
+            msg = msg.format(row_object.file_name, row_object.line_number, ror_id)
+            pytest.fail(msg)
 
 @pytest.mark.parametrize("row_object", DATA["institutions"])
 def test_institution_file_identifiers(row_object):
@@ -171,8 +247,8 @@ def test_institution_file_identifiers(row_object):
         msg = MSG_HEAD + "Institution identifier is empty."
         msg = msg.format(row_object.file_name, row_object.line_number)
         pytest.fail(msg)
-    if institution not in APC_INSTITUTIONS:
-        msg = MSG_HEAD + "Institution identifier '{}' does not occur in APC data set."
+    if institution not in INSTITUTIONS:
+        msg = MSG_HEAD + "Institution identifier '{}' does not occur in any data set."
         msg = msg.format(row_object.file_name, row_object.line_number, institution)
         pytest.fail(msg)
 
@@ -181,12 +257,12 @@ def test_geo_data(row_object):
     continent = row_object.row[3]
     country = row_object.row[4]
     state = row_object.row[5]
-    if not oat.has_value(continent):
-        msg = MSG_HEAD + "Continent column is empty."
-        msg = msg.format(row_object.file_name, row_object.line_number)
-        pytest.fail(msg)
     if not oat.has_value(country):
         msg = MSG_HEAD + "Country column is empty."
+        msg = msg.format(row_object.file_name, row_object.line_number)
+        pytest.fail(msg)
+    if not oat.has_value(continent):
+        msg = MSG_HEAD + "Continent column is empty."
         msg = msg.format(row_object.file_name, row_object.line_number)
         pytest.fail(msg)
     if not oat.has_value(state):
@@ -224,7 +300,7 @@ def test_translations(row_object):
             msg = msg.format(ins_group)
             pytest.fail(msg)
 
-@pytest.mark.parametrize("institution", APC_INSTITUTIONS)
+@pytest.mark.parametrize("institution", INSTITUTIONS)
 def test_apc_file_identifiers(institution):
     for row_object in DATA["institutions"]:
         # There are more efficient ways to do this (f.e. assert set() == set()),
@@ -232,6 +308,6 @@ def test_apc_file_identifiers(institution):
         if institution == row_object.row[0]:
             break
     else:
-        msg = "APC data identifier '{}' does not occur in institution file."
+        msg = "institutional identifier '{}' does not occur in institution file."
         msg = msg.format(institution)
         pytest.fail(msg)

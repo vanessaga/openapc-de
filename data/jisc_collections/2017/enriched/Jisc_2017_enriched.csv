@@ -7134,7 +7134,7 @@ NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 "UCL",2017,2629.44,"10.1016/j.ajog.2017.06.018",NA,"Elsevier BV","American Journal of Obstetrics and Gynecology","0002-9378","0002-9378",NA,"0002-9378","http://creativecommons.org/licenses/by/4.0/",TRUE,"28651860","PMC5628948","ut:000411434300022",NA,FALSE
 "UCL",2017,2207.83,"10.1016/j.ijcci.2017.11.003",NA,"Elsevier BV","International Journal of Child-Computer Interaction","2212-8689","2212-8689",NA,"2212-8689","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,NA,NA,FALSE
 "UCL",2017,2649.38,"10.1016/j.fuel.2017.10.094",NA,"Elsevier BV","Fuel","0016-2361","0016-2361",NA,"0016-2361","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000425863300034",NA,FALSE
-"UCL",2017,680.44,"10.1016/j.alcr.2017.09.002",NA,"Elsevier BV","Advances in Life Course Research","1040-2608","1040-2608",NA,"1040-2608","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000418970100003",NA,FALSE
+"UCL",2017,680.44,"10.1016/j.alcr.2017.09.002",NA,"Elsevier BV","Advances in Life Course Research","1040-2608","1040-2608",NA,"1569-4909","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000418970100003",NA,FALSE
 "UCL",2017,805.19,"10.1016/j.polgeo.2017.06.011",NA,"Elsevier BV","Political Geography","0962-6298","0962-6298",NA,"0962-6298","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000427667300015",NA,FALSE
 "UCL",2017,2444.27,"10.1016/j.bjps.2017.06.017",NA,"Elsevier BV","Journal of Plastic, Reconstructive & Aesthetic Surgery","1748-6815","1748-6815",NA,"1748-6815","http://creativecommons.org/licenses/by/4.0/",TRUE,"28734753",NA,"ut:000415188100014",NA,FALSE
 "UCL",2017,2041.33,"10.1016/j.ces.2017.09.021",NA,"Elsevier BV","Chemical Engineering Science","0009-2509","0009-2509",NA,"0009-2509","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000418482300004",NA,FALSE
@@ -7780,10 +7780,10 @@ NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 "UCL",2017,201.66,"10.1088/0022-3727/49/48/485501",NA,"IOP Publishing","Journal of Physics D: Applied Physics","0022-3727","0022-3727","1361-6463","0022-3727","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000387879800001",NA,FALSE
 "UCL",2017,201.66,"10.1088/1361-6528/aa5112",NA,"IOP Publishing","Nanotechnology","0957-4484","0957-4484","1361-6528","0957-4484","http://creativecommons.org/licenses/by/3.0/",TRUE,"28032607",NA,"ut:000408173800001",NA,FALSE
 "UCL",2017,201.66,"10.1088/1361-6560/61/24/8750",NA,"IOP Publishing","Physics in Medicine and Biology","0031-9155","0031-9155","1361-6560","0031-9155","http://creativecommons.org/licenses/by/3.0/",TRUE,"27893445",NA,"ut:000391636000001",NA,FALSE
-"UCL",2017,1266.87,"10.3847/2041-8213/aa7851",NA,"American Astronomical Society","The Astrophysical Journal","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000406276800001",NA,FALSE
+"UCL",2017,1266.87,"10.3847/2041-8213/aa7851",NA,"American Astronomical Society","The Astrophysical Journal Letters","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000406276800001",NA,FALSE
 "UCL",2018,1776.36,"10.1088/1367-2630/aaa654",NA,"IOP Publishing","New Journal of Physics","1367-2630",NA,"1367-2630","1367-2630","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000424670300004",NA,TRUE
 "UCL",2017,1695.65,"10.1088/1367-2630/aa781c",NA,"IOP Publishing","New Journal of Physics","1367-2630",NA,"1367-2630","1367-2630","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,NA,NA,TRUE
-"UCL",2017,1321.09,"10.3847/2041-8213/aa88af",NA,"American Astronomical Society","The Astrophysical Journal","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000409526200002",NA,FALSE
+"UCL",2017,1321.09,"10.3847/2041-8213/aa88af",NA,"American Astronomical Society","The Astrophysical Journal Letters","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000409526200002",NA,FALSE
 "UCL",2017,1369.84,"10.3847/1538-3881/aa773f",NA,"American Astronomical Society","The Astronomical Journal","1538-3881",NA,"1538-3881","0004-6256","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000405069800003",NA,FALSE
 "UCL",2018,1939,"10.3847/1538-4357/aaa6d1",NA,"American Astronomical Society","The Astrophysical Journal","1538-4357",NA,"1538-4357","0004-637X","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000425637200014",NA,FALSE
 "UCL",2018,2726.42,"10.3847/1538-3881/aa8405",NA,"American Astronomical Society","The Astronomical Journal","1538-3881",NA,"1538-3881","0004-6256","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000408694900001",NA,FALSE
@@ -10701,7 +10701,7 @@ NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 "University of Cambridge",2018,1602.33,"10.1038/s41598-018-23056-4",NA,"Springer Nature","Scientific Reports","2045-2322",NA,"2045-2322","2045-2322","http://creativecommons.org/licenses/by/4.0",TRUE,"29545540","PMC5854709","ut:000427465800005",NA,TRUE
 "University of Cambridge",2017,2845.18,"10.1016/j.apsusc.2017.10.019",NA,"Elsevier BV","Applied Surface Science","0169-4332","0169-4332",NA,"0169-4332","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000418883800074",NA,FALSE
-"University of Cambridge",2017,1689.03,"10.1642/auk-16-128.1",NA,"American Ornithologists' Union","The Auk","0004-8038","0004-8038","1938-4254","0004-8038","http://www.bioone.org/page/resources/researchers/rights_and_permissions",TRUE,NA,NA,"ut:000398573200006",NA,FALSE
+"University of Cambridge",2017,1689.03,"10.1642/auk-16-128.1",NA,"American Ornithologists' Union","Ornithology","0004-8038","0004-8038","1938-4254","0004-8038","http://www.bioone.org/page/resources/researchers/rights_and_permissions",TRUE,NA,NA,"ut:000398573200006",NA,FALSE
 "University of Cambridge",2018,1661.25,"10.1016/j.nicl.2017.08.007",NA,"Elsevier BV","NeuroImage: Clinical","2213-1582","2213-1582",NA,"2213-1582","http://creativecommons.org/licenses/by/4.0/",TRUE,"28856091","PMC5562176","ut:000413235100031",NA,TRUE
 "University of Cambridge",2018,3391.25,"10.1242/dev.158501",NA,"The Company of Biologists","Development","0950-1991","0950-1991","1477-9129","0950-1991","http://www.biologists.com/user-licence-1-1",TRUE,"29361568","PMC5818005","ut:000424653300010",NA,FALSE
 "University of Cambridge",2018,2320.03,"10.1088/1361-6668/aaa831",NA,"IOP Publishing","Superconductor Science and Technology","0953-2048","0953-2048","1361-6668","0953-2048","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000424507900001",NA,FALSE
@@ -15172,7 +15172,7 @@ NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
-"University of Glasgow",2017,1659.44,"10.3847/2041-8213/aa8904",NA,"American Astronomical Society","The Astrophysical Journal","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000410912100001",NA,FALSE
+"University of Glasgow",2017,1659.44,"10.3847/2041-8213/aa8904",NA,"American Astronomical Society","The Astrophysical Journal Letters","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000410912100001",NA,FALSE
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 "University of Glasgow",2017,1843.51,"10.1136/heartjnl-2017-312003",NA,"BMJ","Heart","1355-6037","1355-6037","1468-201X","1355-6037","CC BY",TRUE,"28982722","PMC5890639","ut:000429733300009",NA,FALSE
 "University of Glasgow",2018,3267.89,"10.1016/j.jcmg.2017.08.027",NA,"Elsevier BV","JACC: Cardiovascular Imaging","1936-878X","1936-878X",NA,"1876-7591","http://creativecommons.org/licenses/by/4.0/",TRUE,"29153575","PMC6130225","ut:000443447000007",NA,FALSE
@@ -15329,7 +15329,7 @@ NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
-"University of Glasgow",2017,1313.11,"10.3847/2041-8213/aa8f3a",NA,"American Astronomical Society","The Astrophysical Journal","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000412577000003",NA,FALSE
+"University of Glasgow",2017,1313.11,"10.3847/2041-8213/aa8f3a",NA,"American Astronomical Society","The Astrophysical Journal Letters","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000412577000003",NA,FALSE
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
@@ -17054,7 +17054,7 @@ NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 "University of Leeds",2017,588.24,"10.1080/15568318.2017.1368748",NA,"Informa UK Limited","International Journal of Sustainable Transportation","1556-8318","1556-8318","1556-8334","1556-8318","CC BY",TRUE,NA,NA,"ut:000425181500002",NA,FALSE
 "University of Leeds",2017,599.87,"10.1080/23792949.2017.1353886",NA,"Informa UK Limited","Area Development and Policy","2379-2949","2379-2949","2379-2957","2379-2949","CC BY",TRUE,NA,NA,"ut:000435480700004",NA,FALSE
 "University of Leeds",2017,604.19,"10.1080/13669877.2017.1351479",NA,"Informa UK Limited","Journal of Risk Research","1366-9877","1366-9877","1466-4461","1366-9877","CC BY",TRUE,NA,NA,NA,NA,FALSE
-"University of Leeds",2017,626.83,"10.1080/09535314.2017.1350831",NA,"Informa UK Limited","Economic Systems Research","0953-5314","0953-5314","1469-5758","0953-5314","CC BY-NC-ND",TRUE,NA,NA,"ut:000423491500004",NA,FALSE
+"",,,"","","","","","","","","","","","","","",""
 "University of Leeds",2017,609.82,"10.1080/10439463.2017.1341508",NA,"Informa UK Limited","Policing and Society","1043-9463","1043-9463","1477-2728","1043-9463","CC BY",TRUE,NA,NA,"ut:000408913100005",NA,FALSE
 "University of Leeds",2017,620.38,"10.1080/14693062.2017.1333949",NA,"Informa UK Limited","Climate Policy","1469-3062","1469-3062","1752-7457","1469-3062","CC BY",TRUE,NA,NA,"ut:000428156600008",NA,FALSE
 "University of Leeds",2017,624.68,"10.1080/14780038.2017.1329125",NA,"Informa UK Limited","Cultural and Social History","1478-0038","1478-0038","1478-0046","1478-0038","CC BY",TRUE,NA,NA,"ut:000417992300008",NA,FALSE
@@ -17959,7 +17959,7 @@ NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE,NA,NA,NA,NA,NA
 "University of Manchester",2017,2550.04,"10.3389/fpsyg.2017.01235",NA,"Frontiers Media SA","Frontiers in Psychology","1664-1078",NA,"1664-1078","1664-1078","CC BY",TRUE,"28824476","PMC5543079","ut:000407362800001",NA,TRUE
 "University of Manchester",2017,3705.42,"10.1111/jan.13375",NA,"Wiley-Blackwell","Journal of Advanced Nursing","0309-2402",NA,NA,"0309-2402","http://creativecommons.org/licenses/by-nc-nd/4.0/",TRUE,"28677174",NA,"ut:000418365400009",NA,FALSE
 "University of Manchester",2017,2566.3,"10.1007/s11214-017-0345-9",NA,"Springer Nature","Space Science Reviews","0038-6308","0038-6308","1572-9672","0038-6308","http://www.springer.com/tdm",TRUE,NA,NA,"ut:000414548500013",NA,FALSE
-"University of Manchester",2017,821.53,"10.3847/2041-8213/834/2/l8",NA,"American Astronomical Society","The Astrophysical Journal","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000401604800001",NA,FALSE
+"University of Manchester",2017,821.53,"10.3847/2041-8213/834/2/l8",NA,"American Astronomical Society","The Astrophysical Journal Letters","2041-8213",NA,"2041-8213","2041-8205","http://creativecommons.org/licenses/by/3.0/",TRUE,NA,NA,"ut:000401604800001",NA,FALSE
 "University of Manchester",2017,2117.7,"10.1021/acsami.7b01879",NA,"American Chemical Society (ACS)","ACS Applied Materials & Interfaces","1944-8244","1944-8244","1944-8252","1944-8244","http://pubs.acs.org/page/policy/authorchoice_ccby_termsofuse.html",TRUE,"28276673",NA,"ut:000398246900108",NA,FALSE
 "University of Manchester",2017,2371.67,"10.1371/journal.pntd.0005708",NA,"Public Library of Science (PLoS)","PLOS Neglected Tropical Diseases","1935-2735",NA,"1935-2735","1935-2727","http://creativecommons.org/licenses/by/4.0/",TRUE,"28650985","PMC5501682","ut:000405080700068",NA,TRUE
 "University of Manchester",2017,3916.5,"10.1242/dev.139253",NA,"The Company of Biologists","Development","0950-1991","0950-1991","1477-9129","0950-1991","http://creativecommons.org/licenses/by/3.0",TRUE,"27621060","PMC5117144","ut:000393452900009",NA,FALSE

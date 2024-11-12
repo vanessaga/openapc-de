@@ -3,6 +3,7 @@
 
 import csv
 from collections import OrderedDict
+import datetime
 from html import unescape
 from http.client import RemoteDisconnected
 import json
@@ -11,7 +12,7 @@ import logging
 from logging.handlers import MemoryHandler
 import os
 import re
-from shutil import copyfileobj
+from shutil import copyfileobj, copy2
 import sys
 from urllib.parse import quote_plus, urlencode
 from urllib.request import build_opener, urlopen, urlretrieve, HTTPErrorProcessor, Request
@@ -38,12 +39,19 @@ except ImportError:
 USER_AGENT = ("OpenAPC Toolkit (https://github.com/OpenAPC/openapc-de/blob/master/python/openapc_toolkit.py;"+
               " mailto:openapc@uni-bielefeld.de)")
 
+# Optional token for Crossref Metadata Plus Service (loaded lazily)
+CROSSREF_PLUS_TOKEN = 'unset'
+
 # regex for detecing DOIs
 DOI_RE = re.compile(r"^(((https?://)?(dx.)?doi.org/)|(doi:))?(?P<doi>10\.[0-9]+(\.[0-9]+)*\/\S+)", re.IGNORECASE)
 # regex for detecting shortDOIs
 SHORTDOI_RE = re.compile(r"^(https?://)?(dx.)?doi.org/(?P<shortdoi>[a-z0-9]+)$", re.IGNORECASE)
 
 ISSN_RE = re.compile(r"^(?P<first_part>\d{4})\-(?P<second_part>\d{3})(?P<check_digit>[\dxX])$")
+
+# regex for ROR IDs, see also https://ror.readme.io/docs/ror-identifier-pattern
+ROR_RE = re.compile(r"^((https?://)?ror.org/)?0[a-z0-9]{6}[0-9]{2}$")
+
 
 OAI_COLLECTION_CONTENT = OrderedDict([
     ("institution", "intact:institution"),
@@ -111,6 +119,19 @@ OPENAPC_STANDARD_QUOTEMASK = [
     True
 ]
 
+# Only quote the doi column, all others are monetary values
+ADDITIONAL_COSTS_QUOTEMASK = [
+    True,
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+]
+
 COLUMN_SCHEMAS = {
     "journal-article": [
         "institution",
@@ -167,8 +188,22 @@ COLUMN_SCHEMAS = {
         "license_ref",
         "indexed_in_crossref",
         "doab"
+    ],
+    "additional_costs": [
+        "doi",
+        "colour charge",
+        "cover charge",
+        "page charge",
+        "permission",
+        "reprint",
+        "submission fee",
+        "payment fee",
+        "other"
     ]
 }
+
+# short-term cache for annual exchange rates
+EXCHANGE_RATES = {}
 
 INSTITUTIONS_FILE = "../data/institutions.csv"
 INSTITUTIONS_MAP = None
@@ -233,14 +268,124 @@ class OpenAPCUnicodeWriter(object):
         for row in rows:
             self._write_row(self._prepare_row(row, True))
 
+class CSVColumn(object):
+
+    MANDATORY = {"text": "mandatory", "color": "green"}
+    BACKUP = {"text": "backup", "color": "blue"}
+    RECOMMENDED = {"text": "recommended", "color": "cyan"}
+    ADDITIONAL_COSTS = {"text": "additional_costs", "color": "magenta"}
+    NONE = {"text": "not required", "color": "yellow"}
+
+    OW_ALWAYS = 0
+    OW_ASK = 1
+    OW_NEVER = 2
+
+    _OW_MSG = (u"\033[91mConflict\033[0m: Existing non-NA value " +
+               u"\033[93m{ov}\033[0m in column \033[93m{name}\033[0m is to be " +
+               u"replaced by new value \033[93m{nv}\033[0m.\nAllow overwrite?\n" +
+               u"1) Yes\n2) Yes, and always replace \033[93m{ov}\033[0m by "+
+               "\033[93m{nv}\033[0m in this column\n3) Yes, and always " +
+               "overwrite in this column\n4) No\n5) No, and never replace " +
+               "\033[93m{ov}\033[0m by \033[93m{nv}\033[0m in this " +
+               "column\n6) No, and never overwrite in this column\n>")
+
+    def __init__(self, column_type, requirement=None, index=None, column_name="", overwrite=OW_ASK):
+        self.column_type = column_type
+        if requirement is None:
+            self.requirement = {
+                "articles": CSVColumn.NONE,
+                "books": CSVColumn.NONE
+            }
+        else:
+            self.requirement = requirement
+        self.index = index
+        self.column_name = column_name
+        self.overwrite = overwrite
+        self.overwrite_whitelist = {}
+        self.overwrite_blacklist = {}
+
+    def get_req_description(self, colored=True):
+        requirements = []
+        for pub_type, required in self.requirement.items():
+            if colored:
+                requirement = colorize(required["text"] + " for " + pub_type, required["color"])
+            else:
+                requirement = required["text"] + " for " + pub_type
+            requirements.append(requirement)
+        return ", ".join(requirements)
+
+    def check_overwrite(self, old_value, new_value):
+        if old_value == new_value:
+            return old_value
+        # Priority: Empty or NA values will always be overwritten.
+        if old_value == "NA":
+            return new_value
+        if old_value.strip() == "":
+            return new_value
+        # Do not replace an existing old value with NA
+        if new_value == "NA":
+            return old_value
+        if self.overwrite == CSVColumn.OW_ALWAYS:
+            return new_value
+        if self.overwrite == CSVColumn.OW_NEVER:
+            return old_value
+        if old_value in self.overwrite_blacklist:
+            if self.overwrite_blacklist[old_value] == new_value:
+                return old_value
+        if old_value in self.overwrite_whitelist:
+            return new_value
+        msg = CSVColumn._OW_MSG.format(ov=old_value, name=self.column_name,
+                                       nv=new_value)
+        ret = input(msg)
+        while ret not in ["1", "2", "3", "4", "5", "6"]:
+            ret = input("Please select a number between 1 and 5:")
+        if ret == "1":
+            return new_value
+        if ret == "2":
+            self.overwrite_whitelist[old_value] = new_value
+            return new_value
+        if ret == "3":
+            self.overwrite = CSVColumn.OW_ALWAYS
+            return new_value
+        if ret == "4":
+            return old_value
+        if ret == "5":
+            self.overwrite_blacklist[old_value] = new_value
+            return old_value
+        if ret == "6":
+            self.overwrite = CSVColumn.OW_NEVER
+            return old_value
+
 class DOAJAnalysis(object):
 
-    def __init__(self, doaj_csv_file, update=False):
+    MSGS = {
+        "not_found": 'DOAJ offline copy not found at "{}", downloading ' +
+                      'a fresh copy...',
+        "forced": 'Forced download of a fresh DOAJ offline copy to "{}"...',
+        "max_mdays": 'Your DOAJ offline copy at "{}" is {} days old. ' +
+                     'The limit is {} days, downloading a fresh copy...',
+        "backup": 'The previous offline copy was backed up as "{}".'
+    }
+
+    def __init__(self, doaj_csv_file, force_update=False, max_mdays=None,
+                 backup=True, verbose=False):
         self.doaj_issn_map = {}
         self.doaj_eissn_map = {}
         
-        if not os.path.isfile(doaj_csv_file) or update :
-            doaj_csv_file = self.download_doaj_csv(doaj_csv_file)
+        if not os.path.isfile(doaj_csv_file):
+            if verbose:
+                print_c(self.MSGS['not_found'].format(doaj_csv_file))
+            doaj_csv_file = self.download_doaj_csv(doaj_csv_file, False, verbose)
+        elif force_update:
+            if verbose:
+                print_c(self.MSGS['forced'].format(doaj_csv_file))
+            doaj_csv_file = self.download_doaj_csv(doaj_csv_file, backup, verbose)
+        elif max_mdays is not None:
+            file_mdays = self.get_file_mdate_days(doaj_csv_file)
+            if file_mdays > max_mdays:
+                if verbose:
+                    print_c(self.MSGS['max_mdays'].format(doaj_csv_file, file_mdays, max_mdays))
+                doaj_csv_file = self.download_doaj_csv(doaj_csv_file, backup, verbose)
 
         handle = open(doaj_csv_file, "r")
         reader = csv.DictReader(handle)
@@ -253,19 +398,37 @@ class DOAJAnalysis(object):
             if eissn:
                 self.doaj_eissn_map[eissn] = journal_title
 
+    def get_file_mdate_days(self, csv_file):
+        now = datetime.datetime.now()
+        then = datetime.datetime.fromtimestamp(os.path.getmtime(csv_file))
+        timediff = now - then
+        return timediff.days
+
     def lookup(self, any_issn):
         if any_issn in self.doaj_issn_map:
             return self.doaj_issn_map[any_issn]
         elif any_issn in self.doaj_eissn_map:
             return self.doaj_eissn_map[any_issn]
         return None
-        
-    def download_doaj_csv(self, filename):
+
+    def download_doaj_csv(self, filename, make_backup=False, verbose=False):
+        backup_msg = None
+        if make_backup and os.path.isfile(filename):
+            then = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
+            mdate = then.strftime("%Y_%m_%d_%H_%M_%S")
+            backup_target = "tempfiles/DOAJ_" + mdate + ".csv"
+            if verbose:
+                backup_msg = self.MSGS['backup'].format(backup_target)
+            copy2(filename, backup_target)
         request = Request("https://doaj.org/csv")
         request.add_header("User-Agent", USER_AGENT)
         with urlopen(request) as source:
             with open(filename, "wb") as dest:
                 copyfileobj(source, dest)
+        if verbose:
+            print_c("...Done!")
+            if backup_msg:
+                print_c(backup_msg)
         return filename
 
 class EZBSrcaping(object):
@@ -276,13 +439,16 @@ class EZBSrcaping(object):
     """
 
     EZB_SEARCH_URL = ("https://ezb.uni-regensburg.de/searchres.phtml?" +
-                      "bibid=AAAAA&colors=7&lang=de&jq_type1=QS&jq_term1=")
+                      "bibid=AAAAA&colors=7&lang=de&jq_type1=QS&")
     EZB_ID_URL = ('https://ezb.uni-regensburg.de/detail.phtml?')
 
-    JOURNAL_PAGE_INDICATOR = re.compile(r'<h1\s+class="detail_heading"\s*>')
-    JOURNAL_ACCESS = re.compile(r'<h1\s+class="detail_heading"\s*>\s*<div\s+class="filter-container-mid"\s+title="(?P<access_msg>.*?)">\s*<span\s+class="filter-light\s+(?P<green>.*?)"\s*>\s*</span>\s*<span\s+class="filter-light\s+(?P<yellow>.*?)"\s*>\s*</span>\s*<span\s+class="filter-light\s+(?P<red>.*?)"\s*>')
+    JOURNAL_PAGE_INDICATOR = re.compile(r'<h1\s+class="detail_heading".*?>')
+    #JOURNAL_ACCESS = re.compile(r'<h1\s+class="detail_heading"\s*>\s*<div\s+class="filter-container-mid"\s+title="(?P<access_msg>.*?)">\s*<span\s+class="filter-light\s+(?P<green>.*?)"\s*>\s*</span>\s*<span\s+class="filter-light\s+(?P<yellow>.*?)"\s*>\s*</span>\s*<span\s+class="filter-light\s+(?P<red>.*?)"\s*>')
+    JOURNAL_ACCESS = re.compile(r'<div\s+class="filter-container-mid leftfloat"\s+title="(?P<access_msg>.*?)".*?>\s*<span\s+class="filter-light\s+(?P<green>.*?)"\s*>\s*</span>\s*<span\s+class="filter-light\s+(?P<yellow>.*?)"\s*>\s*</span>\s*<span\s+class="filter-light\s+(?P<red>.*?)"\s*>')
     JOURNAL_TITLE = re.compile(r'<dd\s+id="title"\s+class="defListContentDefinition"\s*>\s*(?P<title>.*?)\s*</dd\s*>')
     JOURNAL_REMARKS = re.compile(r'<dt\s+class="defListContentTitle"\s*>\s*Bemerkung:\s*</dt\s*>\s*<dd\s+class="defListContentDefinition"\s*>\s*(?P<remarks>.*?)\s*</dd\s*>')
+    JOURNAL_CATEGORY_LABELS = re.compile(r"<span\s+class='label\s+label-usercolor'\s+role='button'\s+tabindex='\d'\s+aria-describedby='apcDesc'\s*>(?P<category>.*?)</span>")
+    DOAJ_LINK = re.compile(r'<a\s+href="(?P<doaj_link>.*?)"\s+title=".*?"\s+target="_blank">\s*DOAJ\s*</a>')
 
     RESULT_LINKS = re.compile(r'<a\s+href="warpto.phtml\?(?P<url_params>.*?)"\s+title="Direktlink zur Zeitschrift"\s*>')
 
@@ -292,7 +458,9 @@ class EZBSrcaping(object):
             "access_msg" : None,
             "access_color": None,
             "title": None,
-            "remarks": None
+            "remarks": None,
+            "categories": [],
+            "doaj_link": None
         }
         access_mo = re.search(self.JOURNAL_ACCESS, content)
         if access_mo:
@@ -318,6 +486,13 @@ class EZBSrcaping(object):
             res["remarks"] = remarks_dict["remarks"]
         else:
             res["errors"].append("Could not scrap journal remarks information (RE 'JOURNAL_REMARKS' did not find anything)")
+        categories = re.findall(self.JOURNAL_CATEGORY_LABELS, content)
+        if categories:
+            res["categories"] = categories
+        doaj_link_mo = re.search(self.DOAJ_LINK, content)
+        if doaj_link_mo:
+            doaj_link_dict = doaj_link_mo.groupdict()
+            res["doaj_link"] = doaj_link_dict["doaj_link"]
         return res
 
     def _request_ezb_page(self, url):
@@ -337,9 +512,9 @@ class EZBSrcaping(object):
             ret_value['error_msg'] = "URLError: {}".format(urle.reason)
         return ret_value
 
-    def get_ezb_info(self, issn):
+    def get_ezb_info(self, search_term):
         ret_value = {"success": True, "data": []}
-        url = self.EZB_SEARCH_URL + issn
+        url = self.EZB_SEARCH_URL + urlencode({"jq_term1": search_term})
         answer = self._request_ezb_page(url)
         if not answer['success']:
             return answer
@@ -884,92 +1059,153 @@ def get_csv_file_content(file_name, enc=None, force_header=False, print_results=
 def has_value(field):
     return len(field) > 0 and field != "NA"
 
-def oai_harvest(basic_url, metadata_prefix=None, oai_set=None, processing=None, out_file_suffix=None):
+def _process_oai_invoice(invoice_elem, namespaces, period=None):
+    global EXCHANGE_RATES
+    invoice_xpaths = {
+        'fee_type': 'intact:fee_type',
+        'amount': 'intact:ammount',
+        'currency': 'intact:currency'
+    }
+    data = {}
+    for elem, xpath in invoice_xpaths.items():
+        result = invoice_elem.find(xpath, namespaces)
+        if result is not None and result.text is not None:
+            data[elem] = result.text
+        else:
+            msg = 'Could not process invoice data: Element "{}" not found!'
+            print_r(msg.format(elem))
+            return None
+    if data['fee_type'] not in ['APC', 'Hybrid-OA']:
+        msg = 'Could not process invoice data: Unknown fee_type "{}"'
+        print_r(msg.format(data['fee_type']))
+        return None
+    if data['currency'] != 'EUR':
+        cur = data['currency']
+        if period is None:
+            msg = 'Could not process invoice data: Currency is "{}" and no period for automated conversion was found.'
+            print_r(msg.format(cur))
+            return None
+        if cur not in EXCHANGE_RATES:
+            try:
+                EXCHANGE_RATES[cur] = get_euro_exchange_rates(cur, "A")
+            except ValueError as ve:
+                msg = 'Could not process invoice data: Error while obtaining exchange rates for automated conversion: {}.'
+                print_r(msg.format(str(ve)))
+                return None
+        try:
+            exchange_rate = EXCHANGE_RATES[cur][period]
+        except KeyError as ke:
+            msg = 'Could not process invoice data: No annual exchange rate available for currency {} and period {}.'
+            print_r(msg.format(cur, period))
+            return None
+        euro_amount = round(float(data['amount'])/float(exchange_rate), 2)
+        msg = 'Automated conversion: {} {} -> {} EUR (period: {})'
+        msg = msg.format(data['amount'], cur, euro_amount, period)
+        print_b(msg)
+        data['currency'] = 'EUR'
+        data['amount'] = str(euro_amount)
+    return data
+
+def _auto_atof(str_value):
     """
-    Harvest OpenAPC records via OAI-PMH
+    string to float conversion with best guessing of locale
     """
+    str_value = str_value.strip()
+    old_locale = locale.getlocale(locale.LC_NUMERIC)
+    if re.compile('\d+\.\d+').match(str_value):
+        locale.setlocale(locale.LC_NUMERIC, locale.normalize('en.utf-8'))
+        float_value = locale.atof(str_value)
+    elif re.compile('\d+\,\d+').match(str_value):
+        locale.setlocale(locale.LC_NUMERIC, locale.normalize('de.utf-8'))
+        float_value = locale.atof(str_value)
+    else:
+        try:
+            float_value = float(str_value)
+        except ValueError as ve:
+            return None
+    locale.setlocale(locale.LC_NUMERIC, old_locale)
+    return float_value
+
+def process_intact_xml(processing_instructions=None, *xml_content_strings):
     collection_xpath = ".//oai_2_0:metadata//intact:collection"
     record_xpath = ".//oai_2_0:record"
     identifier_xpath = ".//oai_2_0:header//oai_2_0:identifier"
-    token_xpath = ".//oai_2_0:resumptionToken"
-    processing_regex = re.compile(r"'(?P<target>\w*?)':'(?P<generator>.*?)'")
-    variable_regex = re.compile(r"%(\w*?)%")
-    #institution_xpath =
+    invoice_xpath = "intact:invoice"
     namespaces = {
         "oai_2_0": "http://www.openarchives.org/OAI/2.0/",
         "intact": "http://intact-project.org"
     }
-    url = basic_url + "?verb=ListRecords"
-    if metadata_prefix:
-        url += "&metadataPrefix=" + metadata_prefix
-    if oai_set:
-        url += "&set=" + oai_set
-    if processing:
-        match = processing_regex.match(processing)
-        if match:
-            groupdict = match.groupdict()
-            target = groupdict["target"]
-            generator = groupdict["generator"]
-            variables = variable_regex.search(generator).groups()
-        else:
-            print_r("Error: Unable to parse processing instruction!")
-            processing = None
-    print_b("Harvesting from " + url)
     articles = []
-    file_output = ""
-    while url is not None:
-        try:
-            request = Request(url)
-            url = None
-            response = urlopen(request)
-            content_string = response.read()
-            if out_file_suffix:
-                file_output += content_string.decode()
-            root = ET.fromstring(content_string)
-            records = root.findall(record_xpath, namespaces)
-            counter = 0
-            for record in records:
-                article = {}
-                identifier = record.find(identifier_xpath, namespaces)
-                article["identifier"] = identifier.text
-                collection = record.find(collection_xpath, namespaces)
-                if collection is None:
-                    # Might happen with deleted records
-                    continue
-                for elem, xpath in OAI_COLLECTION_CONTENT.items():
-                    article[elem] = "NA"
-                    if xpath is not None:
-                        result = collection.find(xpath, namespaces)
-                        if result is not None and result.text is not None:
-                            article[elem] = result.text
-                if processing:
-                    target_string = generator
-                    for variable in variables:
-                        target_string = target_string.replace("%" + variable + "%", article[variable])
-                    article[target] = target_string
-                if article["euro"] in ["NA", "0"]:
-                    print_r("Article skipped, no APC amount found.")
-                    continue
-                if article["doi"] != "NA":
-                    norm_doi = get_normalised_DOI(article["doi"])
-                    if norm_doi is None:
-                        article["doi"] = "NA"
+    for content_string in xml_content_strings:
+        root = ET.fromstring(content_string)
+        records = root.findall(record_xpath, namespaces)
+        counter = 0
+        for record in records:
+            article = {}
+            identifier = record.find(identifier_xpath, namespaces)
+            article["identifier"] = identifier.text
+            collection = record.find(collection_xpath, namespaces)
+            if collection is None:
+                # Might happen with deleted records
+                continue
+            for elem, xpath in OAI_COLLECTION_CONTENT.items():
+                article[elem] = "NA"
+                if xpath is not None:
+                    result = collection.find(xpath, namespaces)
+                    if result is not None and result.text is not None:
+                        article[elem] = result.text
+            # JOIN2 institutions make use of the invoice variant
+            invoices = collection.findall(invoice_xpath, namespaces)
+            invoice_fee_type = None
+            for invoice in invoices:
+                invoice_data = _process_oai_invoice(invoice, namespaces, article['period'])
+                if invoice_data:
+                    # check for consistent fee types
+                    if invoice_fee_type is None:
+                        invoice_fee_type = invoice_data['fee_type']
+                    elif invoice_fee_type != invoice_data['fee_type']:
+                        msg = "Error: Record {} contains invoices with different OA fee types!"
+                        print_r(msg.format(article['identifier']))
+                        article['euro'] = 'NA'
+                        break
+                    if not has_value(article['euro']):
+                        article['euro'] = invoice_data['amount']
                     else:
-                        article["doi"] = norm_doi
-                articles.append(article)
-                counter += 1
-            token = root.find(token_xpath, namespaces)
-            if token is not None and token.text is not None:
-                url = basic_url + "?verb=ListRecords&resumptionToken=" + token.text
-            print_g(str(counter) + " articles harvested.")
-        except HTTPError as httpe:
-            code = str(httpe.getcode())
-            print("HTTPError: {} - {}".format(code, httpe.reason))
-        except URLError as urle:
-            print("URLError: {}".format(urle.reason))
-    if out_file_suffix:
-        with open("raw_harvest_data_" + out_file_suffix, "w") as out:
-            out.write(file_output)
+                        old_amount = _auto_atof(article['euro'])
+                        new_amount = _auto_atof(invoice_data['amount'])
+                        article['euro'] = str(old_amount + new_amount)
+                        msg = "More than one APC amount found, adding values ({} + {} = {})."
+                        print_b(msg.format(old_amount, new_amount, old_amount + new_amount))
+            if processing_instructions:
+                target_string = processing_instructions["generator"]
+                for variable in processing_instructions["variables"]:
+                    target_string = target_string.replace("%" + variable + "%", article[variable])
+                article[processing_instructions["target"]] = target_string
+            if article["euro"] == 'NA':
+                print_r("Article skipped, no APC amount found.")
+                continue
+            euro_float = _auto_atof(article["euro"])
+            if euro_float is None:
+                msg = "Article skipped, invalid value found in euro field ({})."
+                print_r(msg.format(article['euro']))
+                continue
+            if euro_float <= 0.0:
+                msg = "Article skipped, non-positive APC amount found ({})."
+                print_r(msg.format(article['euro']))
+                continue
+            if euro_float.is_integer():
+                 article["euro"] = str(int(euro_float))
+            else:
+                article["euro"] = str(euro_float)
+            if article["doi"] != "NA":
+                norm_doi = get_normalised_DOI(article["doi"])
+                if norm_doi is None:
+                    article["doi"] = "NA"
+                else:
+                    article["doi"] = norm_doi
+            articles.append(article)
+            counter += 1
+        print_g(str(counter) + " articles harvested.")
     return articles
 
 def find_book_dois_in_crossref(isbn_list):
@@ -996,10 +1232,8 @@ def find_book_dois_in_crossref(isbn_list):
         return ret_value
     filter_list = ["isbn:" + isbn.strip() for isbn in isbn_list]
     filters = ",".join(filter_list)
-    api_url = "https://api.crossref.org/works?filter="
-    url = api_url + filters + "&rows=500"
-    request = Request(url)
-    request.add_header("User-Agent", USER_AGENT)
+    route = "?filter=" + filters + "&rows=500"
+    request = _build_crossref_request(route)
     try:
         ret = urlopen(request)
         content = ret.read()
@@ -1008,7 +1242,7 @@ def find_book_dois_in_crossref(isbn_list):
             ret_value["success"] = True
         else:
             for item in data["message"]["items"]:
-                if item["type"] in ["monograph", "book"] and item["DOI"] not in ret_value["dois"]:
+                if item["type"] in ["monograph", "book", "edited-book"] and item["DOI"] not in ret_value["dois"]:
                     ret_value["dois"].append(item["DOI"])
             if len(ret_value["dois"]) == 0:
                 msg = "No monograph/book DOI type found in  Crossref ISBN search result ({})!"
@@ -1024,16 +1258,15 @@ def find_book_dois_in_crossref(isbn_list):
     return ret_value
 
 def title_lookup(lookup_title, acccepted_doi_types, auto_accept=False):
-    api_url = "https://api.crossref.org/works?"
     empty_result = {
         "found_title": "",
         "similarity": 0,
         "doi": ""
     }
     params = {"rows": "100", "query.bibliographic": lookup_title}
-    url = api_url + urlencode(params, quote_via=quote_plus)
-    request = Request(url)
-    request.add_header("User-Agent", USER_AGENT)
+    route = "?" + urlencode(params, quote_via=quote_plus)
+    request = _build_crossref_request(route)
+
     skipped_stats = {}
     try:
         ret = urlopen(request)
@@ -1142,6 +1375,25 @@ def _extract_crossref_isxn(crossref_data, identifier_type, representation_type):
                     break
     return ret
 
+def _build_crossref_request(api_route):
+    global CROSSREF_PLUS_TOKEN
+    if CROSSREF_PLUS_TOKEN == "unset":
+        if os.path.isfile("crossref_plus_token"):
+            with open("crossref_plus_token", "r") as f:
+                token = f.read()
+                CROSSREF_PLUS_TOKEN = token.strip()
+                print_c("API Key for Crossref Plus successfully loaded.")
+        else:
+            CROSSREF_PLUS_TOKEN = None
+            print_y('Did not find a file "crossref_plus_token" with ' +
+                    'an API key - the public Crossref API will be used.')
+    url = 'https://api.crossref.org/works/' + api_route
+    req = Request(url)
+    req.add_header('User-Agent', USER_AGENT)
+    if CROSSREF_PLUS_TOKEN is not None and CROSSREF_PLUS_TOKEN != "unset":
+        req.add_header('Crossref-Plus-API-Token', CROSSREF_PLUS_TOKEN)
+    return req
+
 def get_metadata_from_crossref(doi_string):
     """
     Take a DOI and extract metadata relevant to OpenAPC from crossref.
@@ -1205,7 +1457,7 @@ def get_metadata_from_crossref(doi_string):
             }
         },
         'book': {
-            'aliases': ['monograph'],
+            'aliases': ['monograph', 'edited-book'],
             'data_fields': {
                 'publisher': {
                     'access': 'path',
@@ -1242,9 +1494,7 @@ def get_metadata_from_crossref(doi_string):
         error_msg = 'Parse Error: "{}" is no valid DOI'.format(doi_string)
         return {'success': False, 'error_msg': error_msg, 'exception': None}
 
-    url = 'http://api.crossref.org/works/' + doi
-    req = Request(url)
-    req.add_header('User-Agent', USER_AGENT)
+    req = _build_crossref_request(doi)
     ret_value = {'success': True}
     try:
         response = urlopen(req)
@@ -1305,6 +1555,32 @@ def get_metadata_from_crossref(doi_string):
         ret_value['exception'] = udte
     return ret_value
 
+def get_metadata_from_ror(ror_id):
+    """
+    Look up a ROR ID and extract metadata relevant to OpenAPC
+    """
+    ret = {"success": False}
+    ror_id = ror_id.strip()
+    if not ROR_RE.match(ror_id):
+        msg = "Regex mismatch: {} does not seem to be a valid ROR ID."
+        ret["error_msg"] = msg.format(ror_id)
+        return ret
+    url = "https://api.ror.org/organizations/"
+    url += ror_id
+    data = {}
+    try:
+        req = Request(url)
+        response = urlopen(req)
+        content_string = response.read()
+        ror_data = json.loads(content_string)
+        data["institution"] = ror_data["name"]
+    except HTTPError as httpe:
+        ret['error_msg'] = 'HTTPError: {} - {}'.format(httpe.code, httpe.reason)
+        return ret
+    ret["data"] = data
+    ret["success"] = True
+    return ret
+
 def get_metadata_from_pubmed(doi_string):
     """
     Look up a DOI in Europe PMC and extract Pubmed ID and Pubmed Central ID
@@ -1351,6 +1627,9 @@ def get_metadata_from_pubmed(doi_string):
     except URLError as urle:
         ret_value['success'] = False
         ret_value['error_msg'] = "URLError: {}".format(urle.reason)
+    except ET.ParseError as etpe:
+        ret_value['success'] = False
+        ret_value['error_msg'] = "ElementTree Parse Error: {}".format(etpe.msg)
     return ret_value
 
 def get_euro_exchange_rates(currency, frequency="D"):
@@ -1393,13 +1672,14 @@ def get_euro_exchange_rates(currency, frequency="D"):
         result[date] = value
     return result
 
-def _process_euro_value(euro_value, round_monetary, row_num, index, offsetting_mode):
+def _process_euro_value(euro_value, round_monetary, row_num, index, offsetting_mode, additional_costs=False):
     if not has_value(euro_value):
-        msg = "Line %s: Empty monetary value in column %s."
-        if offsetting_mode is None:
-            logging.error(msg, row_num, index)
-        else:
-            logging.warning(msg, row_num, index)
+        if not additional_costs:
+            msg = "Line %s: Empty monetary value in column %s."
+            if offsetting_mode is None:
+                logging.error(msg, row_num, index)
+            else:
+                logging.warning(msg, row_num, index)
         return "NA"
     try:
         # Cast to float to ensure the decimal point is a dot (instead of a comma)
@@ -1415,11 +1695,12 @@ def _process_euro_value(euro_value, round_monetary, row_num, index, offsetting_m
                 msg = "Line %s: " + MESSAGES["digits_error"]
                 logging.error(msg, row_num, euro_value)
         if euro == 0:
-            msg = "Line %s: Euro value is 0"
-            if offsetting_mode is None:
-                logging.error(msg, row_num)
-            else:
-                logging.warning(msg, row_num)
+            if not additional_costs:
+                msg = "Line %s: Euro value is 0"
+                if offsetting_mode is None:
+                    logging.error(msg, row_num)
+                else:
+                    logging.warning(msg, row_num)
         return str(euro)
     except ValueError:
         msg = "Line %s: " + MESSAGES["locale"]
@@ -1455,6 +1736,7 @@ def _process_crossref_results(current_row, row_num, key, value):
     if value is not None:
         if key == "journal_full_title":
             unified_value = get_unified_journal_title(value)
+            unified_value = unified_value.replace("&amp;", "&")
             if unified_value != value:
                 msg = MESSAGES["unify"].format("journal title", value, unified_value)
                 logging.warning(msg)
@@ -1632,7 +1914,9 @@ def process_row(row, row_num, column_map, num_required_columns, additional_isbn_
             current_row[column_type] = ""
             continue
         if column_type == "euro" and index is not None:
-            current_row["euro"] = _process_euro_value(row[index], round_monetary, row_num, index, offsetting_mode)
+            current_row["euro"] = _process_euro_value(row[index], round_monetary, row_num, index, offsetting_mode, False)
+        elif csv_column.requirement["articles"] == CSVColumn.ADDITIONAL_COSTS and index is not None:
+            current_row[column_type] = _process_euro_value(row[index], round_monetary, row_num, index, None, True)
         elif column_type == "period" and index is not None:
             current_row["period"] = _process_period_value(row[index], row_num)
         elif column_type == "is_hybrid" and index is not None:
@@ -1662,7 +1946,7 @@ def process_row(row, row_num, column_map, num_required_columns, additional_isbn_
             row[index] = found_doi
             return process_row(row, row_num, column_map, num_required_columns, additional_isbn_columns,
                 doab_analysis, doaj_analysis, no_crossref_lookup, no_pubmed_lookup,
-                no_doaj_lookup, no_title_lookup, round_monetary, offsetting_mode, orig_file_path)
+                no_doaj_lookup, no_title_lookup, preprint_auto_accept, round_monetary, offsetting_mode, orig_file_path)
         # lookup the book title in Crossref
         lookup_title = current_row["book_title"]
         if has_value(lookup_title):
@@ -1675,7 +1959,7 @@ def process_row(row, row_num, column_map, num_required_columns, additional_isbn_
                 row[index] = book_doi
                 return process_row(row, row_num, column_map, num_required_columns, additional_isbn_columns,
                     doab_analysis, doaj_analysis, no_crossref_lookup, no_pubmed_lookup,
-                    no_doaj_lookup, no_title_lookup, round_monetary, offsetting_mode, orig_file_path)
+                    no_doaj_lookup, no_title_lookup, preprint_auto_accept, round_monetary, offsetting_mode, orig_file_path)
     if has_value(doi):
         # Normalise DOI
         norm_doi = get_normalised_DOI(doi)
@@ -1714,7 +1998,7 @@ def process_row(row, row_num, column_map, num_required_columns, additional_isbn_
                             row[index] = article_doi
                             return process_row(row, row_num, column_map, num_required_columns, additional_isbn_columns,
                                 doab_analysis, doaj_analysis, no_crossref_lookup, no_pubmed_lookup,
-                                no_doaj_lookup, no_title_lookup, round_monetary, offsetting_mode, orig_file_path)
+                                no_doaj_lookup, no_title_lookup, preprint_auto_accept, round_monetary, offsetting_mode, orig_file_path)
             if crossref_result["success"]:
                 data = crossref_result["data"]
                 record_type = data.pop("doi_type")
@@ -1740,7 +2024,7 @@ def process_row(row, row_num, column_map, num_required_columns, additional_isbn_
                     row[index] = found_doi
                     return process_row(row, row_num, column_map, num_required_columns, additional_isbn_columns,
                                        doab_analysis, doaj_analysis, no_crossref_lookup, no_pubmed_lookup,
-                                       no_doaj_lookup, no_title_lookup, round_monetary, offsetting_mode, orig_file_path)
+                                       no_doaj_lookup, no_title_lookup, preprint_auto_accept, round_monetary, offsetting_mode, orig_file_path)
         # include pubmed metadata
         if not no_pubmed_lookup and record_type == "journal-article":
             pubmed_result = get_metadata_from_pubmed(doi)
@@ -1837,7 +2121,23 @@ def process_row(row, row_num, column_map, num_required_columns, additional_isbn_
         if column.column_type == "added_unknown_column":
             result.append(row[column.index])
 
-    return (record_type, result)
+    ret = {record_type: result}
+
+    additional_cost_data = False
+    for csv_column in column_map.values():
+        if csv_column.requirement["articles"] == CSVColumn.ADDITIONAL_COSTS:
+            additional_cost_data = True
+            break
+
+    if additional_cost_data:
+        ret["additional_costs"] = []
+        for field in COLUMN_SCHEMAS["additional_costs"]:
+            if field in current_row and has_value(current_row["euro"]):
+                ret["additional_costs"].append(current_row[field])
+            else:
+                ret["additional_costs"].append("NA")
+
+    return ret
 
 def get_hybrid_status_from_whitelist(hybrid_status):
     """
@@ -1907,7 +2207,8 @@ def colorize(text, color):
         "green": "\033[92m",
         "yellow": "\033[93m",
         "blue": "\033[94m",
-        "cyan": "\033[96m"
+        "cyan": "\033[96m",
+        "magenta": "\033[95m"
     }
     return ANSI_COLORS[color] + text + "\033[0m"
 
@@ -1925,3 +2226,6 @@ def print_y(text):
 
 def print_c(text):
     print(colorize(text, "cyan"))
+
+def print_m(text):
+    print(colorize(text, "magenta"))

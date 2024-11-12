@@ -3,8 +3,8 @@
 "DLR",2021,610,"10.1016/j.csite.2021.101546",FALSE,"Elsevier BV","Case Studies in Thermal Engineering","2214-157X","2214-157X",NA,"2214-157X","http://creativecommons.org/licenses/by-nc-nd/4.0/",TRUE,NA,NA,"ut:000708239200072",NA,TRUE
 "DLR",2021,1830,"10.1016/j.egyr.2021.07.005",FALSE,"Elsevier BV","Energy Reports","2352-4847","2352-4847",NA,"2352-4847","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000701671000014",NA,TRUE
 "DLR",2021,2220,"10.1016/j.esr.2021.100744",FALSE,"Elsevier BV","Energy Strategy Reviews","2211-467X","2211-467X",NA,"2211-467X","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000741376300006",NA,TRUE
-"DLR",2021,2000,"10.1016/j.jag.2021.102332",FALSE,"Elsevier BV","International Journal of Applied Earth Observation and Geoinformation","0303-2434","0303-2434",NA,"0303-2434","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000645173600002",NA,FALSE
-"DLR",2021,2000,"10.1016/j.jag.2021.102672",FALSE,"Elsevier BV","International Journal of Applied Earth Observation and Geoinformation","0303-2434","0303-2434",NA,"0303-2434","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000748575300001",NA,FALSE
+"DLR",2021,2000,"10.1016/j.jag.2021.102332",FALSE,"Elsevier BV","International Journal of Applied Earth Observation and Geoinformation","1569-8432","1569-8432",NA,"1569-8432","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000645173600002",NA,FALSE
+"DLR",2021,2000,"10.1016/j.jag.2021.102672",FALSE,"Elsevier BV","International Journal of Applied Earth Observation and Geoinformation","1569-8432","1569-8432",NA,"1569-8432","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000748575300001",NA,FALSE
 "DLR",2021,2100,"10.1016/j.matdes.2021.109858",FALSE,"Elsevier BV","Materials & Design","0264-1275","0264-1275",NA,"0264-1275","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000675863000009",NA,TRUE
 "DLR",2021,2100,"10.1016/j.matdes.2021.109885",FALSE,"Elsevier BV","Materials & Design","0264-1275","0264-1275",NA,"0264-1275","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000675864800010",NA,TRUE
 "DLR",2021,870,"10.1016/j.oceram.2021.100056",FALSE,"Elsevier BV","Open Ceramics","2666-5395","2666-5395",NA,"2666-5395","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,NA,NA,TRUE
@@ -60,7 +60,7 @@
 "DLR",2021,993.6,"10.1186/s12544-021-00499-x",FALSE,"Springer Nature","European Transport Research Review","1867-0717","1867-0717","1866-8887","1866-8887","https://creativecommons.org/licenses/by/4.0",TRUE,NA,"PMC8314267","ut:000678532300001",NA,TRUE
 "DLR",2021,993.6,"10.1186/s12544-021-00507-0",FALSE,"Springer Nature","European Transport Research Review","1867-0717","1867-0717","1866-8887","1866-8887","https://creativecommons.org/licenses/by/4.0",TRUE,NA,"PMC8475387","ut:000699903800002",NA,TRUE
 "DLR",2021,1015,"10.1186/s40623-021-01435-y",FALSE,"Springer Nature","Earth, Planets and Space","1880-5981",NA,"1880-5981","1343-8832","https://creativecommons.org/licenses/by/4.0",TRUE,NA,NA,"ut:000653050900001",NA,TRUE
-"DLR",2021,712.08,"10.1186/s42055-021-00042-9",FALSE,"Springer Nature","Sustainable Earth","2520-8748",NA,"2520-8748","2520-8748","https://creativecommons.org/licenses/by/4.0",TRUE,NA,NA,NA,NA,TRUE
+"DLR",2021,712.08,"10.1186/s42055-021-00042-9",FALSE,"Springer Nature","Sustainable Earth Reviews","2520-8748",NA,"2520-8748","2520-8748","https://creativecommons.org/licenses/by/4.0",TRUE,NA,NA,NA,NA,TRUE
 "DLR",2021,1662.4,"10.1364/oe.425492",FALSE,"Optical Society of America (OSA)","Optics Express","1094-4087",NA,"1094-4087","1094-4087","https://doi.org/10.1364/OA_License_v1#VOR-OA",TRUE,"34266171",NA,NA,NA,TRUE
 "DLR",2021,1176.62,"10.1364/osac.419481",FALSE,"Optical Society of America (OSA)","OSA Continuum","2578-7519",NA,"2578-7519","2578-7519","https://doi.org/10.1364/OA_License_v1#CCBY",TRUE,NA,NA,NA,NA,TRUE
 "DLR",2021,250,"10.14512/rur.64",FALSE,"Oekom Publishers GmbH","Raumforschung und Raumordnung","1869-4179","0034-0111","1869-4179","0034-0111","https://creativecommons.org/licenses/by/4.0",TRUE,NA,NA,"ut:000692172800005",NA,TRUE
@@ -283,7 +283,7 @@
 "DLR",2021,2190,"10.1016/j.isprsjprs.2021.04.006",TRUE,"Elsevier BV","ISPRS Journal of Photogrammetry and Remote Sensing","0924-2716","0924-2716",NA,"0924-2716","http://creativecommons.org/licenses/by/4.0/",TRUE,"34219969","PMC8218792","ut:000660980400006",NA,FALSE
 "DLR",2021,2190,"10.1016/j.isprsjprs.2021.05.011",TRUE,"Elsevier BV","ISPRS Journal of Photogrammetry and Remote Sensing","0924-2716","0924-2716",NA,"0924-2716","http://creativecommons.org/licenses/by/4.0/",TRUE,"34433999","PMC8336649","ut:000669954900005",NA,FALSE
 "DLR",2021,2190,"10.1016/j.isprsjprs.2021.11.024",TRUE,"Elsevier BV","ISPRS Journal of Photogrammetry and Remote Sensing","0924-2716","0924-2716",NA,"0924-2716","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,NA,NA,FALSE
-"DLR",2021,2000,"10.1016/j.jag.2021.102314",TRUE,"Elsevier BV","International Journal of Applied Earth Observation and Geoinformation","0303-2434","0303-2434",NA,"0303-2434","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000641984500001",NA,FALSE
+"DLR",2021,2000,"10.1016/j.jag.2021.102314",TRUE,"Elsevier BV","International Journal of Applied Earth Observation and Geoinformation","1569-8432","1569-8432",NA,"1569-8432","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000641984500001",NA,FALSE
 "DLR",2021,7600,"10.1016/j.joule.2021.05.006",TRUE,"Elsevier BV","Joule","2542-4351","2542-4351",NA,"2542-4351","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000675889700012",NA,FALSE
 "DLR",2021,3200,"10.1016/j.jpowsour.2020.229375",TRUE,"Elsevier BV","Journal of Power Sources","0378-7753","0378-7753",NA,"0378-7753","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000615925100005",NA,FALSE
 "DLR",2021,2410,"10.1016/j.jvolgeores.2021.107174",TRUE,"Elsevier BV","Journal of Volcanology and Geothermal Research","0377-0273","0377-0273",NA,"0377-0273","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,"ut:000624314600001",NA,FALSE
@@ -344,3 +344,7 @@
 "DLR",2021,1653.99,"10.2514/1.j060025",TRUE,"American Institute of Aeronautics and Astronautics (AIAA)","AIAA Journal","0001-1452","0001-1452","1533-385X","0001-1452",NA,TRUE,NA,NA,NA,NA,FALSE
 "DLR",2021,1746.57,"10.2514/1.j060799",TRUE,"American Institute of Aeronautics and Astronautics (AIAA)","AIAA Journal","0001-1452","0001-1452","1533-385X","0001-1452",NA,TRUE,NA,NA,NA,NA,FALSE
 "",,,"","","","","","","","","","","","","","",""
+"DLR",2021,1040,"10.14814/phy2.14787",FALSE,"Wiley-Blackwell","Physiological Reports","2051-817X","2051-817X","2051-817X","2051-817X","http://creativecommons.org/licenses/by/4.0/",TRUE,"33955197","PMC8100405","ut:000650726900005",NA,TRUE
+"",,,"","","","","","","","","","","","","","",""
+"DLR",2021,792,"10.1007/s41109-021-00421-3",FALSE,"Springer Nature","Applied Network Science","2364-8228",NA,"2364-8228","2364-8228","https://creativecommons.org/licenses/by/4.0",TRUE,"34746373","PMC8560885","ut:000714036100001",NA,TRUE
+"DLR",2021,1866,"10.1029/2021sw002889",TRUE,"American Geophysical Union (AGU)","Space Weather","1542-7390","1542-7390","1542-7390","1542-7390","http://creativecommons.org/licenses/by/4.0/",TRUE,NA,NA,NA,NA,FALSE

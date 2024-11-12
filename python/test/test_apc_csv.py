@@ -1,40 +1,85 @@
+import datetime
 import pytest
-from pytest import fail
 
+from pytest import fail
 from csv import DictReader
 from os.path import dirname, join
 from sys import path
+from urllib.parse import urlparse
+
+from sortedcontainers import SortedList
 
 APC_DATA = []
+APC_AC_DATA = []
 BPC_DATA = []
 
 DATA_FILES = {
     "apc": {
         "file_path": "data/apc_de.csv",
-        "unused_fields": ["institution", "period", "license_ref", "pmid", "pmcid", "ut"],
+        "is_ac_file_for": None,
+        "unused_fields": ["license_ref", "pmid", "pmcid", "ut"],
         "target_file": APC_DATA,
         "row_length": 18,
         "has_issn": True,
-        "has_isbn": False
+        "has_isbn": False,
+        "has_url": True,
+        "doi_list": SortedList(),
+    },
+    "apc_ac": {
+        "file_path": "data/apc_de_additional_costs.csv",
+        "is_ac_file_for": "apc",
+        "unused_fields": [],
+        "target_file": APC_AC_DATA,
+        "row_length": 9,
+        "has_issn": False,
+        "has_isbn": False,
+        "has_url": False,
+        "doi_list": SortedList(),
     },
     "ta": {
         "file_path": "data/transformative_agreements/transformative_agreements.csv",
-        "unused_fields": ["institution", "period", "license_ref", "pmid", "pmcid", "ut"],
+        "is_ac_file_for": None,
+        "unused_fields": ["license_ref", "pmid", "pmcid", "ut"],
         "target_file": APC_DATA,
         "row_length": 19,
         "has_issn": True,
-        "has_isbn": False
+        "has_isbn": False,
+        "has_url": True,
+        "doi_list": SortedList(),
     },
     "bpc": {
         "file_path": "data/bpc.csv",
-        "unused_fields": ["institution", "period", "license_ref"],
+        "is_ac_file_for": None,
+        "unused_fields": ["license_ref"],
         "target_file": BPC_DATA,
         "row_length": 13,
         "has_issn": False,
-        "has_isbn": True
+        "has_isbn": True,
+        "has_url": False,
+        "doi_list": SortedList(),
     }
 }
 
+KNOWN_DUPLICATES = {
+    "apc": {
+		"unresolved_duplicates": {
+			"file_path": "data/unresolved_duplicates.csv",
+			"doi_list": [],
+		},
+        "apc_cofunding": {
+			"file_path": "data/apc_cofunding.csv",
+			"doi_list": [],
+        },
+    },
+    "bpc": {
+		"unresolved_bpc_duplicates": {
+			"file_path": "data/unresolved_bpc_duplicates.csv",
+			"doi_list": [],
+		},
+    }
+}
+
+CURRENT_YEAR = datetime.datetime.now().year
 ISBNHANDLING = None
 
 if __name__ == '__main__':
@@ -45,6 +90,9 @@ if __name__ == '__main__':
     ISBNHANDLING = oat.ISBNHandling("ISBNRangeFile.xml")
     for data_file, metadata in DATA_FILES.items():
         metadata["file_path"] = join("..", "..", metadata["file_path"])
+    for _, file_dict in KNOWN_DUPLICATES.items():
+        for _, metadata in file_dict.items():
+            metadata["file_path"] = join("..", "..", metadata["file_path"])
 
     def fail(msg):
         oat.print_r(msg)
@@ -73,13 +121,24 @@ def _get_isbn_group_publisher(isbn):
         key = ("-").join(group_and_publisher)
         return key
     return None
+    
+def _normalize_url(url_string):
+    parsed_url = urlparse(url_string.lower())
+    stripped_url = parsed_url.netloc + parsed_url.path
+    if parsed_url.query:
+        stripped_url += "?" + parsed_url.query
+    return stripped_url
 
-doi_duplicate_list = []
-isbn_duplicate_list = []
+global_doi_list = SortedList()
+global_isbn_list = SortedList()
+global_url_list = SortedList()
+
 issn_dict = {}
 issn_p_dict = {}
 issn_e_dict = {}
 issn_l_dict = {}
+
+title_dict = {}
 
 isbn_dict = {}
 
@@ -93,8 +152,12 @@ for data_file, metadata in DATA_FILES.items():
             for field in metadata["unused_fields"]:
                 del(row[field])
             metadata["target_file"].append(RowObject(metadata["file_path"], line, row, data_file))
-            doi_duplicate_list.append(row["doi"])
-
+            if oat.has_value(row["doi"]):
+                if metadata["is_ac_file_for"] is None:
+                    global_doi_list.add(row["doi"])
+                metadata["doi_list"].add(row["doi"])
+            if metadata["has_url"] and oat.has_value(row["url"]):
+                global_url_list.add(_normalize_url(row["url"]))
             if metadata["has_issn"]:
                 reduced_row = {}
                 for field in ISSN_DICT_FIELDS:
@@ -140,8 +203,17 @@ for data_file, metadata in DATA_FILES.items():
                     # clear row-internal duplicates
                     if oat.has_value(isbn) and isbn not in isbn_list and isbn not in wl.NON_DUPLICATE_ISBNS:
                         isbn_list.append(isbn)
-                isbn_duplicate_list += isbn_list
+                for entry in isbn_list:
+                    global_isbn_list.add(entry)
             line += 1
+
+for _, file_dict in KNOWN_DUPLICATES.items():
+    for _, metadata in file_dict.items():
+        with open(metadata["file_path"], "r") as csv_file:
+            reader = DictReader(csv_file)
+            for row in reader:
+                if row["doi"] not in metadata["doi_list"]:
+                    metadata["doi_list"].append(row["doi"])
 
 def check_line_length(row_object):
     __tracebackhide__ = True
@@ -166,6 +238,22 @@ def check_common_field_content(row_object):
     __tracebackhide__ = True
     row = row_object.row
     line_str = '{}, line {}: '.format(row_object.file_name, row_object.line_number)
+    if not oat.has_value(row['institution']):
+        fail(line_str + 'the column "institution" must not be empty')
+    if not oat.has_value(row['period']):
+        fail(line_str + 'the column "period" must not be empty')
+    else:
+        try:
+            period_date = datetime.datetime.strptime(row['period'], "%Y")
+            if period_date.year > CURRENT_YEAR + 10:
+                msg = 'the date value in column "period" ("{}") is more than 10 years in the future'
+                fail(line_str + msg.format(row["period"]))
+            elif period_date.year < 1990:
+                msg = 'the date value in column "period" ("{}") is earlier than 1990'
+                fail(line_str + msg.format(row["period"]))
+        except ValueError:
+            msg = 'the value in column "period" ("{}") could not be parsed as a year value'
+            fail(line_str + msg.format(row["period"]))
     if not oat.has_value(row['publisher']):
         fail(line_str + 'the column "publisher" must not be empty')
     if row['indexed_in_crossref'] not in ["TRUE", "FALSE"]:
@@ -206,7 +294,40 @@ def check_apc_field_content(row_object):
                 fail(line_str + 'value in row "euro" (' + row['euro'] + ') must be larger than 0')
         except ValueError:
             fail(line_str + 'value in row "euro" (' + row['euro'] + ') is no valid number')
-            
+
+def check_ac_field_content(row_object):
+    __tracebackhide__ = True
+    row = row_object.row
+    line_str = '{}, line {}: '.format(row_object.file_name, row_object.line_number)
+    if not oat.has_value(row['doi']):
+        fail(line_str + 'the column "doi" must not be empty')
+    cost_data_found = False
+    for cost_field in ["colour charge", "cover charge", "page charge", "permission", "reprint", "submission fee", "payment fee", "other"]:
+        if row[cost_field] is None:
+            fail(line_str + 'cost field "' + cost_field + '" not found. The row is probably malformed')
+            return
+        if oat.has_value(row[cost_field]):
+            try:
+                euro = float(row[cost_field])
+                if euro <= 0:
+                    fail(line_str + 'value in row "' + cost_field + '" (' + row[cost_field] + ') must be larger than 0')
+                else:
+                    cost_data_found = True
+            except ValueError:
+                fail(line_str + 'value in row "' + cost_field + '" (' + row[cost_field] + ') is no valid number')
+    if not cost_data_found:
+        fail(line_str + 'no valid euro amount found in any cost column')
+
+def check_ac_doi_links(row_object):
+    __tracebackhide__ = True
+    row = row_object.row
+    line_str = '{}, line {}: '.format(row_object.file_name, row_object.line_number)
+    ac_metadata = DATA_FILES[row_object.origin]
+    target_file = ac_metadata["is_ac_file_for"]
+    if row["doi"] not in DATA_FILES[target_file]["doi_list"]:
+        msg = line_str + 'DOI {} does not occur in the target primary data file ({})'
+        fail(msg.format(row["doi"], target_file))
+
 def check_bpc_field_content(row_object):
     __tracebackhide__ = True
     row = row_object.row
@@ -215,6 +336,10 @@ def check_bpc_field_content(row_object):
         fail(line_str + 'the column "book_title" must not be empty')
     if len(row['book_title']) != len(row['book_title'].strip()):
         fail(line_str + 'book title (' + row['book_title'] + ') has leading or trailing whitespaces')
+    if row['backlist_oa'] not in ["TRUE", "FALSE"]:
+        fail(line_str + 'value in row "backlist_oa" must either be TRUE or FALSE')
+    if row['doab'] not in ["TRUE", "FALSE"]:
+        fail(line_str + 'value in row "doab" must either be TRUE or FALSE')
 
 def check_issns(row_object):
     __tracebackhide__ = True
@@ -230,22 +355,29 @@ def check_issns(row_object):
                             'ISSN (check digit mismatch)')
     issn_l = row["issn_l"]
     if issn_l != "NA":
-        msg = line_str + "Two entries share a common {} ({}), but the issn_l differs ({} vs {})"
+        msg = line_str + "Two entries share a common {} ({}), but the {} differs ({} vs {})"
         issn = row["issn"]
         if issn != "NA":
             for reduced_row in issn_dict[issn]:
                 if reduced_row["issn_l"] != issn_l:
-                    fail(msg.format("issn", issn, issn_l, reduced_row["issn_l"]))
+                    fail(msg.format("issn", issn, "issn_l", issn_l, reduced_row["issn_l"]))
         issn_p = row["issn_print"]
         if issn_p != "NA":
             for reduced_row in issn_p_dict[issn_p]:
                 if reduced_row["issn_l"] != issn_l:
-                    fail(msg.format("issn_p", issn_p, issn_l, reduced_row["issn_l"]))
+                    fail(msg.format("issn_p", issn_p, "issn_l", issn_l, reduced_row["issn_l"]))
         issn_e = row["issn_electronic"]
         if issn_e != "NA":
             for reduced_row in issn_e_dict[issn_e]:
                 if reduced_row["issn_l"] != issn_l:
-                    fail(msg.format("issn_e", issn_e, issn_l, reduced_row["issn_l"]))
+                    fail(msg.format("issn_e", issn_e, "issn_l", issn_l, reduced_row["issn_l"]))
+        title = reduced_row["journal_full_title"]
+        if title not in title_dict:
+            title_dict[title] = issn_l
+        else:
+            other_issn_l = title_dict[title]
+            if other_issn_l != issn_l and not wl.is_ambiguous_title(title, issn_l, other_issn_l):
+                fail(msg.format("journal_full_title", title, "issn_l", issn_l, other_issn_l))
 
 def check_isbns(row_object):
     __tracebackhide__ = True
@@ -272,12 +404,31 @@ def check_for_doi_duplicates(row_object):
     __tracebackhide__ = True
     doi = row_object.row["doi"]
     if doi and doi != "NA":
-        doi_duplicate_list.remove(doi)
-        if doi in doi_duplicate_list:
-            line_str = '{}, line {}: '.format(row_object.file_name,
-                                              row_object.line_number)
+        line_str = '{}, line {}: '.format(row_object.file_name,
+                                          row_object.line_number)
+        global_doi_list.remove(doi)
+        if doi in global_doi_list:
             fail(line_str + 'Duplicate: DOI "' + doi + '" was ' +
                         'encountered more than one time')
+        if row_object.origin in KNOWN_DUPLICATES:
+            for dup_file_name, file_dict in KNOWN_DUPLICATES[row_object.origin].items():
+                if doi in file_dict["doi_list"]:
+                    msg = 'DOI "{}" is listed in {} and should not appear in {}'
+                    msg = msg.format(doi, dup_file_name, DATA_FILES[row_object.origin]["file_path"])
+                    fail(line_str + msg)
+                    
+def check_for_url_duplicates(row_object):
+    __tracebackhide__ = True
+    url = row_object.row["url"]
+    if url and url != "NA":
+        line_str = '{}, line {}: '.format(row_object.file_name,
+                                          row_object.line_number)
+        norm_url = _normalize_url(url)
+        global_url_list.remove(norm_url)
+        if norm_url in global_url_list:
+            norm_string = " (Original form: '" + url + "')" if norm_url != url else ""
+            fail(line_str + 'Duplicate: Normalized URL "' + norm_url + '" was ' +
+                        'encountered more than one time' + norm_string)
 
 def check_for_isbn_duplicates(row_object):
     __tracebackhide__ = True
@@ -288,8 +439,8 @@ def check_for_isbn_duplicates(row_object):
         if oat.has_value(isbn) and isbn not in isbn_list and isbn not in wl.NON_DUPLICATE_ISBNS:
             isbn_list.append(isbn)
     for isbn in isbn_list:
-        isbn_duplicate_list.remove(isbn)
-        if isbn in isbn_duplicate_list:
+        global_isbn_list.remove(isbn)
+        if isbn in global_isbn_list:
             line_str = '{}, line {}: '.format(row_object.file_name,
                                               row_object.line_number)
             fail(line_str + 'Duplicate: ISBN "' + isbn + '" was ' +
@@ -423,6 +574,15 @@ class TestBPCRows(object):
         check_for_isbn_duplicates(row_object)
         check_for_doi_duplicates(row_object)
 
+@pytest.mark.parametrize("row_object", APC_AC_DATA)
+class TestAPCACRows(object):
+
+    # Set of tests to run on all APC AC data
+    def test_row_format(self, row_object):
+        check_line_length(row_object)
+        check_ac_field_content(row_object)
+        check_ac_doi_links(row_object)
+
 if __name__ == '__main__':
     oat.print_b(str(len(APC_DATA)) + " APC records collected, starting tests...")
     deciles = {round((len(APC_DATA)/10) * i): str(i * 10) + "%" for i in range(1, 10)}
@@ -436,8 +596,17 @@ if __name__ == '__main__':
         check_issns(row_object)
         check_hybrid_status(row_object)
         check_for_doi_duplicates(row_object)
+        check_for_url_duplicates(row_object)
         check_name_consistency(row_object)
         check_ta_data(row_object)
+    oat.print_b(str(len(APC_AC_DATA)) + " APC AC records collected, starting tests...")
+    deciles = {round((len(APC_AC_DATA)/10) * i): str(i * 10) + "%" for i in range(1, 10)}
+    for num, row_object in enumerate(APC_AC_DATA):
+        if num in deciles:
+            oat.print_b(deciles[num])
+        check_line_length(row_object)
+        check_ac_field_content(row_object)
+        check_ac_doi_links(row_object)
     oat.print_b(str(len(BPC_DATA)) + " BPC records collected, starting tests...")
     deciles = {round((len(BPC_DATA)/10) * i): str(i * 10) + "%" for i in range(1, 10)}
     for num, row_object in enumerate(BPC_DATA):

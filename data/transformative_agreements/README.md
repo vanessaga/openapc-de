@@ -14,382 +14,547 @@ Universities and research institutions globally are invited to contribute their 
 
 ## Overview
 
-This dataset contains information on 58,078 articles, published at 326 institutions under 39 different transformative agreements. The data can also be inspected as a [treemap visualisation](https://treemaps.intact-project.org/apcdata/transformative-agreements/).
+This dataset contains information on 119,068 articles, published at 398 institutions under 126 different transformative agreements. The data can also be inspected as a [treemap visualisation](https://treemaps.intact-project.org/apcdata/transformative-agreements/).
 
 ### Breakdown by agreement
 
 
-|Agreement                                    | Articles|
-|:--------------------------------------------|--------:|
-|Springer Compact                             |    34337|
-|Swiss Consortium Elsevier agreement          |     4836|
-|DEAL Wiley Germany                           |     3496|
-|DEAL Springer Nature Germany                 |     3050|
-|French EDP Sciences agreement                |     2649|
-|FinELib Elsevier agreement                   |     1616|
-|Swiss Consortium Wiley agreement             |      964|
-|FinELib Springer Compact agreement           |      895|
-|FinELib Wiley agreement                      |      790|
-|Swiss Consortium Springer Compact agreement  |      693|
-|FinELib Taylor & Francis agreement           |      579|
-|FWF Transformative Agreement Wiley-Blackwell |      464|
-|FinELib IEEE agreement                       |      313|
-|Swiss Consortium T&F agreement               |      307|
-|FinELib SAGE agreement                       |      286|
-|Swiss Consortium RSC agreement               |      258|
-|MPG RSC agreement                            |      246|
-|Swiss Consortium SAGE agreement              |      236|
-|FinELib OUP agreement                        |      207|
-|University of Milan - Springer               |      192|
-|FinELib ACS agreement                        |      184|
-|Austrian Consortium RSC agreement            |      179|
-|FWF Offsetting Agreement T&F                 |      175|
-|FWF Transformative Agreement Springer Nature |      159|
-|FWF Transformative Agreement ACS             |      145|
-|Swiss Consortium CUP agreement               |      132|
-|FinELib Emerald agreement                    |      118|
-|University of Milan - Wiley                  |       98|
-|FWF Offsetting Agreement IOP                 |       82|
-|TIB RSC Journals R&P - TU Berlin             |       81|
-|Swiss Consortium Karger agreement            |       62|
-|FinELib RSC agreement                        |       60|
-|MPG Taylor & Francis agreement               |       46|
-|Austrian Consortium IOP agreement            |       45|
-|MPG IOP agreement                            |       32|
-|Austrian Consortium Emerald agreement        |       23|
-|Austrian Consortium Sage agreement           |       16|
-|University of Milan - De Gruyter             |       15|
-|University of Milan - ACS                    |       12|
+
+|Agreement                                        | Articles|
+|:------------------------------------------------|--------:|
+|Springer Compact                                 |    35725|
+|Swiss Consortium Elsevier agreement              |    10993|
+|DEAL Springer Nature Germany                     |    10850|
+|DEAL Wiley Germany                               |     9756|
+|French EDP Sciences agreement                    |     4998|
+|Swiss Consortium Springer Compact agreement      |     4992|
+|FinELib Elsevier agreement                       |     4939|
+|Swiss Consortium Wiley agreement                 |     3142|
+|FinELib Springer Compact agreement               |     2656|
+|FinELib Wiley agreement                          |     2656|
+|IReL Wiley Agreement                             |     2037|
+|CSIC-Elsevier                                    |     1880|
+|FinELib Taylor & Francis agreement               |     1637|
+|Swiss Consortium T&F agreement                   |     1148|
+|IReL Springer Agreement                          |     1134|
+|IReL T&F Agreement                               |     1006|
+|FinELib IEEE agreement                           |      933|
+|FinELib SAGE agreement                           |      879|
+|FWF Transformative Agreement Wiley-Blackwell     |      869|
+|CSIC-Wiley                                       |      806|
+|Swiss Consortium SAGE agreement                  |      799|
+|FinELib ACS agreement                            |      565|
+|University of Milan - Springer                   |      564|
+|IReL Sage Agreement                              |      562|
+|FinELib OUP agreement                            |      559|
+|IReL IEEE Agreement                              |      557|
+|FWF Transformative Agreement Springer Nature     |      556|
+|Swiss Consortium CUP agreement                   |      503|
+|FWF Transformative Agreement Elsevier            |      498|
+|Swiss Consortium RSC agreement                   |      497|
+|Austrian Consortium Wiley agreement              |      474|
+|CSIC-Royal Society of Chemistry                  |      456|
+|FWF Transformative Agreement ACS                 |      444|
+|FinELib Emerald agreement                        |      435|
+|IReL OUP Agreement                               |      393|
+|CSIC-ACS                                         |      359|
+|CSIC-Springer Nature                             |      357|
+|Austrian Consortium T&F agreement                |      353|
+|IReL ACS Agreement                               |      345|
+|IReL CUP Agreement                               |      333|
+|Swiss Consortium IOP agreement                   |      332|
+|University of Milan - Wiley                      |      310|
+|FWF Transformative Agreement T&F                 |      306|
+|Swiss Consortium OUP Journals Agreement          |      280|
+|CSIC-Oxford University Press                     |      276|
+|University of Milan - Elsevier                   |      276|
+|MPG RSC agreement                                |      246|
+|IReL PLOS Agreement                              |      233|
+|FinELib RSC agreement                            |      231|
+|QNL Elsevier Agreement                           |      194|
+|Swiss Consortium AIP agreement                   |      191|
+|Swiss Consortium Ovid LWW agreement              |      190|
+|Austrian Consortium RSC agreement                |      179|
+|Swiss Consortium Karger agreement                |      174|
+|FWF Transformative Agreement IOP                 |      172|
+|IReL Emerald Agreement                           |      164|
+|IReL RSC Agreement                               |      151|
+|Swiss Consortium ACS agreement                   |      138|
+|FinELib Wolters Kluwer Lippincott agreement      |      127|
+|CSIC-Taylor & Francis                            |      109|
+|QNL Springer Nature Agreement                    |      103|
+|Swiss Consortium IEEE agreement                  |      100|
+|TIB RSC Journals R&P - TU Berlin                 |       95|
+|IReL IOP Agreement                               |       92|
+|QNL Wiley Agreement                              |       92|
+|IReL RIA Agreement                               |       87|
+|QNL T&F Agreement                                |       85|
+|EISZ agreement Springer Nature                   |       79|
+|Swiss Consortium Nature Transformative agreement |       78|
+|EISZ agreement Elsevier                          |       64|
+|IReL AIP Agreement                               |       63|
+|University of Milan - ACS                        |       58|
+|CSIC-Cambridge University Press                  |       57|
+|FWF Transformative Agreement RSC                 |       55|
+|EISZ agreement Akadémiai Kiadó                   |       54|
+|IReL RS Agreement                                |       52|
+|University of Milan - Cambridge University Press |       50|
+|MPG Taylor & Francis agreement                   |       46|
+|Austrian Consortium IOP agreement                |       45|
+|Crui-CARE ACS Agreement                          |       38|
+|IReL Optica Agreement                            |       37|
+|IReL BMJ Agreement                               |       36|
+|Crui-CARE Springer Agreement                     |       35|
+|EISZ agreement Wiley                             |       35|
+|FinELib ACM agreement                            |       34|
+|University of Milan - De Gruyter                 |       34|
+|FinELib Nature Research agreement                |       33|
+|IReL Microbiology Society Agreement              |       32|
+|MPG IOP agreement                                |       32|
+|QNL IEEE Agreement                               |       31|
+|University of Milan - Royal Society of Chemistry |       31|
+|CSIC-AIP                                         |       29|
+|CSIC-Institute of Physics                        |       26|
+|CSIC-Royal Society                               |       25|
+|IReL ACM Agreement                               |       24|
+|Austrian Consortium Emerald agreement            |       23|
+|IReL APA Agreement                               |       21|
+|IReL ECS Agreement                               |       20|
+|FWF Transformative Agreement Sage                |       17|
+|University of Milan - Lippincott                 |       17|
+|Austrian Consortium Sage agreement               |       16|
+|FWF Transformative Agreement IEEE                |       16|
+|FinELib Elsevier Cell Press agreement            |       16|
+|University of Milan - IEEE                       |       16|
+|Crui-CARE Wiley Agreement                        |       15|
+|CSIC-Microbiology Society                        |       13|
+|University of Milan - IOP                        |       12|
+|CSIC-Company of biologists                       |       11|
+|Crui-CARE Elsevier Agreement                     |        8|
+|CSIC-Brill                                       |        7|
+|CSIC-Portland Press                              |        7|
+|Crui-CARE CUP Agreement                          |        6|
+|IReL Company of Biologists Agreement             |        5|
+|IReL CSHL Agreement                              |        4|
+|IReL Cell Press Agreement                        |        4|
+|Crui-CARE AIP Agreement                          |        3|
+|Crui-CARE De Gruyter Agreement                   |        3|
+|QNL OVID Agreement                               |        3|
+|Swiss Consortium ACM agreement                   |        3|
+|CSIC-De Gruyter                                  |        2|
+|Crui-CARE IOP Agreement                          |        2|
+|EISZ agreement Cambridge University Press        |        2|
+|QNL De Gruyter Agreement                         |        2|
+|CSIC-Rockefeller University Press                |        1|
+|EISZ agreement DeGruyter                         |        1|
+|EISZ agreement Lippincott Williams and Wilkins   |        1|
+
+
 
 ### Breakdown by institution
 
 
+
 |Institution                                                                                                                                        | Articles|
 |:--------------------------------------------------------------------------------------------------------------------------------------------------|--------:|
-|French institutions                                                                                                                                |     2649|
-|FWF - Austrian Science Fund                                                                                                                        |     1559|
-|ETH Zurich                                                                                                                                         |     1445|
-|TU Muenchen                                                                                                                                        |     1339|
-|University of Zurich                                                                                                                               |     1243|
-|University of Helsinki                                                                                                                             |     1233|
-|University College London                                                                                                                          |     1022|
-|Lund University                                                                                                                                    |      995|
+|French institutions                                                                                                                                |     4998|
+|Consejo Superior de Investigaciones Cientificas (CSIC)                                                                                             |     4421|
+|University of Helsinki                                                                                                                             |     4225|
+|ETH Zurich                                                                                                                                         |     4192|
+|University of Zurich                                                                                                                               |     4044|
+|FWF - Austrian Science Fund                                                                                                                        |     3469|
+|TU Muenchen                                                                                                                                        |     2598|
+|University of Bern                                                                                                                                 |     2348|
+|University of Geneva                                                                                                                               |     2260|
+|University of Lausanne                                                                                                                             |     1952|
+|University of Basel                                                                                                                                |     1864|
+|Muenchen LMU                                                                                                                                       |     1801|
+|University College Dublin                                                                                                                          |     1745|
+|Aalto University                                                                                                                                   |     1734|
+|Tampere University                                                                                                                                 |     1702|
+|École Polytechnique Fédérale de Lausanne                                                                                                           |     1688|
+|University of Turku                                                                                                                                |     1606|
+|University of Oulu                                                                                                                                 |     1550|
+|Milano U                                                                                                                                           |     1368|
+|Trinity College Dublin                                                                                                                             |     1297|
+|University of Eastern Finland                                                                                                                      |     1219|
+|Charité - Universitätsmedizin Berlin                                                                                                               |     1213|
+|Lund University                                                                                                                                    |     1177|
+|Bonn U                                                                                                                                             |     1124|
+|University College Cork                                                                                                                            |     1070|
+|University of Jyväskylä                                                                                                                            |     1067|
+|Karolinska Institutet                                                                                                                              |     1061|
+|UCL                                                                                                                                                |     1022|
 |MPG                                                                                                                                                |      946|
 |University of Cambridge                                                                                                                            |      912|
 |University of Oxford                                                                                                                               |      883|
-|Karolinska Institute                                                                                                                               |      860|
+|Uppsala University                                                                                                                                 |      869|
+|Tuebingen U                                                                                                                                        |      867|
+|University of Gothenburg                                                                                                                           |      820|
+|University of Galway                                                                                                                               |      818|
+|TU Berlin                                                                                                                                          |      792|
+|Frankfurt U                                                                                                                                        |      777|
 |Imperial College London                                                                                                                            |      771|
-|University of Geneva                                                                                                                               |      762|
-|University of Bern                                                                                                                                 |      756|
-|Uppsala University                                                                                                                                 |      723|
-|University of Gothenburg                                                                                                                           |      682|
+|University of Limerick                                                                                                                             |      714|
+|Medical University of Vienna                                                                                                                       |      682|
+|Empa - Swiss Federal Laboratories for Materials Science and Technology                                                                             |      653|
 |King's College London                                                                                                                              |      652|
-|University of Lausanne                                                                                                                             |      629|
-|Aalto University                                                                                                                                   |      619|
-|Medical University of Vienna                                                                                                                       |      591|
+|Dublin City University                                                                                                                             |      639|
+|Hannover U und TIB                                                                                                                                 |      603|
+|KTH Royal Institute of Technology                                                                                                                  |      590|
 |University of Manchester                                                                                                                           |      585|
-|University of Turku                                                                                                                                |      552|
+|Hohenheim U                                                                                                                                        |      567|
+|Stockholm University                                                                                                                               |      559|
+|Lappeenranta-Lahti University of Technology LUT                                                                                                    |      553|
+|RWTH Aachen                                                                                                                                        |      553|
+|University of Vienna                                                                                                                               |      548|
+|Bielefeld U                                                                                                                                        |      543|
 |University of Amsterdam                                                                                                                            |      542|
-|University of Basel                                                                                                                                |      540|
-|Tampere University                                                                                                                                 |      536|
+|JGU Mainz                                                                                                                                          |      531|
 |Utrecht University                                                                                                                                 |      527|
-|Royal Institute of Technology                                                                                                                      |      521|
-|University of Oulu                                                                                                                                 |      503|
+|Qatar National Library                                                                                                                             |      510|
+|Wageningen University and Research Centre                                                                                                          |      506|
+|DLR                                                                                                                                                |      505|
 |University of Groningen                                                                                                                            |      501|
+|University of Fribourg                                                                                                                             |      496|
 |University of Edinburgh                                                                                                                            |      495|
-|École Polytechnique Fédérale de Lausanne                                                                                                           |      490|
+|PSI - Paul Scherrer Institute                                                                                                                      |      489|
 |Delft University of Technology                                                                                                                     |      484|
-|Wageningen University                                                                                                                              |      482|
-|Stockholm University                                                                                                                               |      468|
+|HHU Düsseldorf                                                                                                                                     |      475|
+|Umeå University                                                                                                                                    |      475|
+|Åbo Akademi University                                                                                                                             |      470|
+|Heidelberg U                                                                                                                                       |      463|
 |Leiden University                                                                                                                                  |      461|
+|Swedish University of Agricultural Sciences                                                                                                        |      461|
+|Linköping University                                                                                                                               |      459|
+|Chalmers University of Technology                                                                                                                  |      458|
 |Erasmus MC                                                                                                                                         |      453|
-|Muenchen LMU                                                                                                                                       |      449|
-|Charité - Universitätsmedizin Berlin                                                                                                               |      448|
 |Academic Medical Center (AMC)                                                                                                                      |      447|
+|TU Darmstadt                                                                                                                                       |      445|
+|Erlangen Nuernberg U                                                                                                                               |      439|
 |University of Innsbruck and Medical University of Innsbruck                                                                                        |      436|
-|Tuebingen U                                                                                                                                        |      431|
+|Greifswald U                                                                                                                                       |      431|
+|KIT                                                                                                                                                |      431|
 |University of Leeds                                                                                                                                |      428|
 |VU University Amsterdam                                                                                                                            |      426|
-|Swedish University of Agricultural Sciences                                                                                                        |      400|
-|University of Eastern Finland                                                                                                                      |      398|
 |University of Southampton                                                                                                                          |      398|
 |Radboud University Medical Center                                                                                                                  |      397|
-|Linköping University                                                                                                                               |      396|
-|Bonn U                                                                                                                                             |      394|
-|Chalmers University of Technology                                                                                                                  |      391|
 |University of Sheffield                                                                                                                            |      387|
-|Umea University                                                                                                                                    |      384|
 |Maastricht University                                                                                                                              |      382|
 |University of Bristol                                                                                                                              |      378|
 |University of Nottingham                                                                                                                           |      377|
 |University Medical Center Utrecht                                                                                                                  |      375|
-|Frankfurt U                                                                                                                                        |      373|
+|Maynooth University                                                                                                                                |      369|
+|Royal College of Surgeons in Ireland                                                                                                               |      364|
 |VU University Medical Center (VUmc)                                                                                                                |      363|
-|University of Vienna                                                                                                                               |      356|
+|Goettingen U                                                                                                                                       |      362|
+|TU Bergakademie Freiberg                                                                                                                           |      362|
+|HU Berlin                                                                                                                                          |      360|
+|Koeln U                                                                                                                                            |      359|
 |University of Birmingham                                                                                                                           |      355|
-|TU Berlin                                                                                                                                          |      340|
+|Kassel U                                                                                                                                           |      350|
 |Cardiff University                                                                                                                                 |      339|
-|University of Jyväskylä                                                                                                                            |      336|
 |University of Warwick                                                                                                                              |      332|
-|University of Milan                                                                                                                                |      317|
+|University of Neuchatel                                                                                                                            |      324|
 |Leiden University Medical Center (LUMC)                                                                                                            |      316|
 |Radboud University                                                                                                                                 |      309|
+|University of St.Gallen                                                                                                                            |      306|
+|Eawag - Swiss Federal Institute of Aquatic Science and Technology                                                                                  |      304|
+|VTT Technical Research Centre of Finland Ltd                                                                                                       |      298|
+|University of Applied Sciences and Arts Western Switzerland                                                                                        |      297|
 |University of Twente                                                                                                                               |      297|
+|WSL - Swiss Federal Institute for Forest, Snow and Landscape Research                                                                              |      292|
 |University of Liverpool                                                                                                                            |      289|
+|ZHAW Zurich University of Applied Sciences                                                                                                         |      287|
+|Duisburg-Essen U                                                                                                                                   |      285|
 |University of Glasgow                                                                                                                              |      285|
 |Eindhoven University of Technology                                                                                                                 |      283|
 |Erasmus University                                                                                                                                 |      283|
-|Newcastle University                                                                                                                               |      275|
+|TU Wien                                                                                                                                            |      283|
+|University of Vaasa                                                                                                                                |      280|
+|University of Newcastle                                                                                                                            |      275|
 |University Medical Center Groningen (UMCG)                                                                                                         |      270|
-|Empa - Swiss Federal Laboratories for Materials Science and Technology                                                                             |      267|
+|Luleå University of Technology                                                                                                                     |      269|
+|Natural Resources Institute Finland                                                                                                                |      269|
 |University of Exeter                                                                                                                               |      262|
-|JGU Mainz                                                                                                                                          |      255|
+|Siegen U                                                                                                                                           |      258|
+|Agroscope                                                                                                                                          |      256|
+|TU Chemnitz                                                                                                                                        |      252|
+|Medical University of Graz                                                                                                                         |      248|
 |Giessen U                                                                                                                                          |      245|
-|Kassel U                                                                                                                                           |      241|
-|TU Darmstadt                                                                                                                                       |      234|
-|TU Wien (TUW)                                                                                                                                      |      231|
+|Università della Svizzera italiana                                                                                                                 |      239|
+|University of Debrecen                                                                                                                             |      236|
+|University of Graz                                                                                                                                 |      232|
 |University of Reading                                                                                                                              |      226|
-|Lulea University of Technology                                                                                                                     |      225|
-|Medical University of Graz                                                                                                                         |      222|
-|Queen's University of Belfast                                                                                                                      |      217|
-|HHU Düsseldorf                                                                                                                                     |      215|
+|University of Natural Resources and Life Sciences Vienna (BOKU)                                                                                    |      219|
+|Queen's University Belfast                                                                                                                         |      217|
+|Kiel U                                                                                                                                             |      214|
+|Technological University Dublin                                                                                                                    |      211|
 |Tilburg University                                                                                                                                 |      208|
-|Bielefeld U                                                                                                                                        |      207|
 |University of York                                                                                                                                 |      205|
-|Hannover U und TIB                                                                                                                                 |      202|
+|Regensburg U                                                                                                                                       |      204|
+|Graz University of Technology                                                                                                                      |      202|
+|Hamburg TUHH                                                                                                                                       |      200|
+|Örebro University                                                                                                                                  |      200|
 |University of Bath                                                                                                                                 |      199|
-|HU Berlin                                                                                                                                          |      196|
 |Queen Mary, University of London                                                                                                                   |      192|
 |Maastricht University Medical Center (UMC+)                                                                                                        |      189|
-|University of Natural Resources and Life Sciences Vienna (BOKU)                                                                                    |      181|
-|PSI - Paul Scherrer Institute                                                                                                                      |      179|
-|Graz University of Technology                                                                                                                      |      176|
-|Durham University                                                                                                                                  |      175|
-|Loughborough University                                                                                                                            |      173|
-|Siegen U                                                                                                                                           |      170|
-|Abo Akademi University                                                                                                                             |      169|
+|FZJ - ZB                                                                                                                                           |      179|
+|Marburg U                                                                                                                                          |      176|
+|University of Durham                                                                                                                               |      175|
+|University of Loughborough                                                                                                                         |      173|
+|TU Braunschweig                                                                                                                                    |      171|
 |University of St Andrews                                                                                                                           |      168|
 |University of Sussex                                                                                                                               |      168|
-|London School of Economics and Political Science                                                                                                   |      166|
-|Örebro University                                                                                                                                  |      165|
+|LSE                                                                                                                                                |      166|
+|Dortmund TU                                                                                                                                        |      165|
+|Graduate Institute of International and Development Studies                                                                                        |      164|
 |University of East Anglia                                                                                                                          |      164|
-|Lappeenranta-Lahti University of Technology LUT                                                                                                    |      162|
+|Bayreuth U                                                                                                                                         |      162|
+|Mannheim U                                                                                                                                         |      162|
+|Bern University of Applied Sciences                                                                                                                |      157|
+|Johannes Kepler University Linz                                                                                                                    |      157|
 |Lancaster University                                                                                                                               |      155|
-|University of Fribourg                                                                                                                             |      155|
 |Nottingham Trent University                                                                                                                        |      154|
+|Linnaeus University                                                                                                                                |      153|
+|University of Applied Sciences and Arts Northwestern Switzerland                                                                                   |      153|
 |University of Strathclyde                                                                                                                          |      151|
 |University of Leicester                                                                                                                            |      146|
-|University of Graz                                                                                                                                 |      144|
+|University of Applied Sciences and Arts of Southern Switzerland                                                                                    |      144|
+|Finnish Institute for Health and Welfare                                                                                                           |      143|
 |Swansea University                                                                                                                                 |      142|
 |University of Aberdeen                                                                                                                             |      142|
-|Hamburg TUHH                                                                                                                                       |      135|
-|Linnaeus University                                                                                                                                |      133|
-|Eawag - Swiss Federal Institute of Aquatic Science and Technology                                                                                  |      130|
-|Johannes Kepler University Linz                                                                                                                    |      130|
+|Paracelsus Medical University                                                                                                                      |      132|
+|Finnish Environment Institute                                                                                                                      |      130|
+|Hanken School of Economics                                                                                                                         |      130|
 |University of Kent                                                                                                                                 |      125|
 |Brunel University                                                                                                                                  |      124|
-|Paracelsus Medical University                                                                                                                      |      116|
+|University of Innsbruck                                                                                                                            |      124|
+|Montanuniversität Leoben                                                                                                                           |      122|
+|University Hospital of Bern                                                                                                                        |      121|
+|Salzburg U                                                                                                                                         |      119|
+|Konstanz U                                                                                                                                         |      118|
 |University of Dundee                                                                                                                               |      115|
-|WSL - Swiss Federal Institute for Forest, Snow and Landscape Research                                                                              |      115|
 |GFZ-Potsdam                                                                                                                                        |      112|
-|University of Neuchatel                                                                                                                            |      112|
+|Scuola Normale Superiore                                                                                                                           |      110|
 |Northumbria University                                                                                                                             |      109|
 |University of Surrey                                                                                                                               |      107|
-|VTT Technical Research Centre of Finland                                                                                                           |      106|
-|Montanuniversität Leoben                                                                                                                           |      105|
+|Augsburg U                                                                                                                                         |      103|
+|Universität Luzern                                                                                                                                 |      103|
+|Jönköping University                                                                                                                               |      102|
 |Liverpool John Moores University                                                                                                                   |      102|
 |Heriot-Watt University                                                                                                                             |       98|
-|Natural Resources Institute Finland                                                                                                                |       98|
-|TU Chemnitz                                                                                                                                        |       93|
-|University of Applied Sciences and Arts Western Switzerland                                                                                        |       90|
-|Royal Holloway, University of London                                                                                                               |       87|
-|University of St.Gallen                                                                                                                            |       87|
+|Malmö University                                                                                                                                   |       93|
+|University of Lapland                                                                                                                              |       89|
+|Vienna University of Economics and Business (WU)                                                                                                   |       88|
+|Royal Holloway                                                                                                                                     |       87|
 |City University London                                                                                                                             |       86|
+|European Organization for Nuclear Research                                                                                                         |       84|
+|Wuppertal U                                                                                                                                        |       83|
+|Karlstad University                                                                                                                                |       82|
 |Sheffield Hallam University                                                                                                                        |       82|
-|Malmö University                                                                                                                                   |       81|
-|Jönköping University                                                                                                                               |       80|
+|TiHo Hannover                                                                                                                                      |       81|
+|University West                                                                                                                                    |       80|
+|Hochschule Luzern                                                                                                                                  |       78|
 |University of Portsmouth                                                                                                                           |       78|
 |Royal Botanic Gardens                                                                                                                              |       76|
-|University of Vaasa                                                                                                                                |       76|
 |Cranfield University                                                                                                                               |       75|
-|Agroscope                                                                                                                                          |       74|
-|ZHAW Zurich University of Applied Sciences                                                                                                         |       74|
+|Mälardalen University                                                                                                                              |       74|
 |Bangor University                                                                                                                                  |       72|
 |Bochum U                                                                                                                                           |       72|
-|Paris Lodron University of Salzburg                                                                                                                |       72|
+|Teagasc                                                                                                                                            |       72|
 |University of Hull                                                                                                                                 |       72|
 |University of Ulster                                                                                                                               |       72|
 |Bournemouth University                                                                                                                             |       71|
-|Karlstad University                                                                                                                                |       70|
-|Università della Svizzera italiana                                                                                                                 |       67|
+|Mid Sweden University                                                                                                                              |       67|
 |University of Stirling                                                                                                                             |       66|
 |Manchester Metropolitan University                                                                                                                 |       64|
-|University West                                                                                                                                    |       64|
-|Mälardalen University                                                                                                                              |       60|
 |The Open University                                                                                                                                |       60|
 |University of Huddersfield                                                                                                                         |       60|
+|University of Veterinary Medicine Vienna                                                                                                           |       59|
 |Aston University                                                                                                                                   |       58|
-|TiHo Hannover                                                                                                                                      |       57|
 |University of Lincoln                                                                                                                              |       57|
-|University of West of England                                                                                                                      |       56|
-|DLR                                                                                                                                                |       55|
+|University of the West of England                                                                                                                  |       56|
 |Keele University                                                                                                                                   |       54|
-|Mid Sweden University                                                                                                                              |       54|
-|Finnish Institute for Health and Welfare                                                                                                           |       52|
-|University of Klagenfurt                                                                                                                           |       51|
-|Finnish Environment Institute                                                                                                                      |       50|
-|Vienna University of Economics and Business (WU)                                                                                                   |       49|
-|Bern University of Applied Sciences                                                                                                                |       48|
+|University of Klagenfurt                                                                                                                           |       54|
+|Forschungsinstitut für biologischen Landbau FiBL                                                                                                   |       53|
+|BTH Blekinge Institute of Technology                                                                                                               |       52|
+|RISE Research Institutes of Sweden                                                                                                                 |       51|
 |St George's, University of London                                                                                                                  |       48|
-|Mannheim U                                                                                                                                         |       47|
-|University of Applied Sciences and Arts Northwestern Switzerland                                                                                   |       47|
 |Fraunhofer-Gesellschaft Publishing Fund                                                                                                            |       46|
-|Graduate Institute of International and Development Studies                                                                                        |       44|
+|University of Gävle                                                                                                                                |       45|
+|Finnish Institute of Occupational Health                                                                                                           |       44|
 |Natural History Museum                                                                                                                             |       44|
+|Södertörns University                                                                                                                              |       44|
+|Geological Survey of Finland                                                                                                                       |       43|
 |Leeds Beckett University                                                                                                                           |       43|
-|University of Veterinary Medicine Vienna                                                                                                           |       43|
-|Hanken School of Economics                                                                                                                         |       41|
 |University of Salford                                                                                                                              |       40|
 |Edge Hill University                                                                                                                               |       39|
 |University of Bradford                                                                                                                             |       39|
-|University of Gävle                                                                                                                                |       39|
 |University of Greenwich                                                                                                                            |       39|
-|University of Lapland                                                                                                                              |       39|
 |Aberystwyth University                                                                                                                             |       38|
-|FZJ - ZB                                                                                                                                           |       38|
-|Blekinge Institute of Technology                                                                                                                   |       37|
+|International Institute for Applied Systems Analysis (IIASA)                                                                                       |       38|
+|Swedish Museum of Natural History                                                                                                                  |       38|
+|Mary Immaculate College                                                                                                                            |       37|
 |HZDR                                                                                                                                               |       36|
 |Leibniz-IGB                                                                                                                                        |       36|
 |Robert Gordon University                                                                                                                           |       36|
 |Netherlands Institute of Ecology                                                                                                                   |       35|
-|Greifswald U                                                                                                                                       |       34|
 |Kingston University                                                                                                                                |       34|
-|Södertörn University                                                                                                                               |       33|
-|University of Applied Sciences and Arts of Southern Switzerland                                                                                    |       33|
+|University of Borås                                                                                                                                |       34|
+|HAW Hamburg                                                                                                                                        |       33|
 |University of Central Lancashire                                                                                                                   |       32|
+|IST Austria                                                                                                                                        |       31|
 |University of West of Scotland                                                                                                                     |       31|
-|RISE Research Institutes of Sweden                                                                                                                 |       30|
-|University of Boras                                                                                                                                |       30|
-|Goldsmiths, University of London                                                                                                                   |       29|
-|International Institute for Applied Systems Analysis (IIASA)                                                                                       |       29|
+|University of Skövde                                                                                                                               |       30|
+|Goldsmiths                                                                                                                                         |       29|
+|University of Applied Sciences Upper Austria                                                                                                       |       29|
 |University of Derby                                                                                                                                |       29|
-|Institute of Science and Technology (IST Austria)                                                                                                  |       28|
-|Swedish Museum of Natural History                                                                                                                  |       28|
-|University of Innsbruck                                                                                                                            |       28|
+|Halmstad University                                                                                                                                |       28|
+|OST University of Applied Science of Eastern Switzerland                                                                                           |       28|
+|University of Liechtenstein                                                                                                                        |       28|
+|Kristianstad University                                                                                                                            |       27|
 |Open University of The Netherlands                                                                                                                 |       27|
-|TU Braunschweig                                                                                                                                    |       26|
-|University of Applied Sciences Upper Austria                                                                                                       |       25|
-|University of Skövde                                                                                                                               |       25|
+|Aachen FH                                                                                                                                          |       26|
+|Finnish Meteorological Institute                                                                                                                   |       26|
+|HS Bielefeld                                                                                                                                       |       26|
+|Swiss Ornithological Institute                                                                                                                     |       26|
+|HafenCity Universität Hamburg                                                                                                                      |       25|
 |University of Westminster                                                                                                                          |       25|
+|DESY                                                                                                                                               |       24|
 |Glasgow Caledonian University                                                                                                                      |       24|
-|Halmstad University                                                                                                                                |       24|
-|Kristianstad University                                                                                                                            |       24|
-|Wageningen UR (University & Research Centre)                                                                                                       |       24|
-|Lucerne University of Applied Sciences and Arts                                                                                                    |       23|
+|Medical University of Innsbruck                                                                                                                    |       24|
+|Dalarna University                                                                                                                                 |       22|
+|Fachhochschule Südwestfalen                                                                                                                        |       21|
+|Pädagogische Hochschule Zürich                                                                                                                     |       21|
 |London South Bank University                                                                                                                       |       20|
+|Stockholm School of Economics                                                                                                                      |       20|
 |Cardiff Metropolitan University                                                                                                                    |       19|
-|Fungal Biodiversity Center (CBS)                                                                                                                   |       19|
-|Dalarna University                                                                                                                                 |       18|
-|HAW Hamburg                                                                                                                                        |       18|
+|Westerdijk Fungal Biodiversity Center (CBS)                                                                                                        |       19|
+|Atlantic Technological University                                                                                                                  |       18|
+|Pädagogische Hochschule Bern                                                                                                                       |       18|
 |Rostock U                                                                                                                                          |       18|
 |Swedish Defence Research Agency                                                                                                                    |       18|
+|Swedish National Road and Transport Research Institute (VTI)                                                                                       |       18|
 |University of Bedfordshire                                                                                                                         |       18|
 |Edinburgh Napier University                                                                                                                        |       17|
-|Stockholm School of Economics                                                                                                                      |       17|
-|Swedish National Road and Transport Research Institute (VTI)                                                                                       |       17|
-|Bielefeld FH                                                                                                                                       |       16|
-|Geological Survey of Finland                                                                                                                       |       16|
-|University of Lucerne                                                                                                                              |       16|
-|Forschungsinstitut für biologischen Landbau FiBL                                                                                                   |       14|
+|National Land Survey of Finland                                                                                                                    |       17|
+|Danube University Krems University for Continuing Education                                                                                        |       16|
+|GESIS                                                                                                                                              |       16|
+|Hochschule Hannover                                                                                                                                |       15|
+|Leibniz-IZW                                                                                                                                        |       15|
+|Munster Technological University                                                                                                                   |       15|
+|Leibniz-IPK                                                                                                                                        |       14|
+|Swiss Federal University for Vocational Education and Training                                                                                     |       14|
 |Birmingham City University                                                                                                                         |       13|
+|GSI                                                                                                                                                |       13|
+|Hochschule Bonn-Rhein-Sieg                                                                                                                         |       13|
+|St.Gallen University of Teacher Education                                                                                                          |       13|
 |TU Clausthal                                                                                                                                       |       13|
+|Häme University of Applied Sciences                                                                                                                |       12|
+|Leibniz-BIPS                                                                                                                                       |       12|
+|Leibniz-ZMT                                                                                                                                        |       12|
+|Turku University of Applied Sciences                                                                                                               |       12|
 |FH Salzburg - University of Applied Sciences                                                                                                       |       11|
+|Haute École Pédagogique du Canton de Vaud                                                                                                          |       11|
 |MDC                                                                                                                                                |       11|
+|Scotland's Rural College                                                                                                                           |       11|
+|South East Technological University                                                                                                                |       11|
+|Swedish School of Sport and Health Sciences                                                                                                        |       11|
 |University of Chester                                                                                                                              |       11|
 |University of the Highlands and Islands                                                                                                            |       11|
-|Swedish School of Sport and Health Sciences (GIH)                                                                                                  |       10|
-|Finnish Institute of Occupational Health                                                                                                           |        9|
-|Finnish Meteorological Institute                                                                                                                   |        9|
-|National Land Survey of Finland                                                                                                                    |        9|
-|Scotland's Rural College                                                                                                                           |        8|
+|HAWK Hildesheim/Holzminden/Göttingen                                                                                                               |       10|
+|Hertie School                                                                                                                                      |       10|
+|Haaga-Helia University of Applied Sciences                                                                                                         |        9|
+|Social Insurance Institution of Finland                                                                                                            |        9|
+|TH Köln                                                                                                                                            |        9|
+|Arcada University of Applied Sciences                                                                                                              |        8|
+|South-Eastern Finland University of Applied Sciences (Xamk)                                                                                        |        8|
 |University of Abertay Dundee                                                                                                                       |        8|
+|University of Applied Sciences of the Grisons                                                                                                      |        8|
 |University of Northampton                                                                                                                          |        8|
 |University of Wales Trinity St David                                                                                                               |        8|
 |Academisch Centrum Tandheelkunde Amsterdam (ACTA)                                                                                                  |        7|
 |Anglia Ruskin University                                                                                                                           |        7|
+|Dundalk Institute of Technology                                                                                                                    |        7|
 |FH St. Pölten - University of Applied Sciences                                                                                                     |        7|
-|Haute École Pédagogique du Canton de Vaud                                                                                                          |        7|
+|HTWG Konstanz                                                                                                                                      |        7|
+|Institute for Advanced Studies Vienna                                                                                                              |        7|
+|Laurea University of Applied Sciences                                                                                                              |        7|
+|Metropolia University of Applied Sciences                                                                                                          |        7|
+|Pädagogische Hochschule Luzern                                                                                                                     |        7|
 |Queen Margaret University                                                                                                                          |        7|
-|Danube University Krems University for Continuing Education                                                                                        |        6|
-|Danube Universtity Krems University for Continuing Education                                                                                       |        6|
+|VATT Institute for Economic Research                                                                                                               |        7|
+|HS Düsseldorf                                                                                                                                      |        6|
 |Netherlands Institute for Neuroscience                                                                                                             |        6|
 |Netherlands Interdisciplinary Demographic Institute (NIDI)                                                                                         |        6|
 |Osnabrück U                                                                                                                                        |        6|
-|OST University of Applied Science of Eastern Switzerland                                                                                           |        6|
-|Swiss Federal Institute for Vocational Education and Training                                                                                      |        6|
-|Swiss Ornithological Institute                                                                                                                     |        6|
+|TH Brandenburg                                                                                                                                     |        6|
 |Trier U                                                                                                                                            |        6|
 |University of Roehampton                                                                                                                           |        6|
-|European Organization for Nuclear Research                                                                                                         |        5|
+|Finnish Food Authority                                                                                                                             |        5|
 |Paul-Drude-Institut für Festkörperelektronik                                                                                                       |        5|
+|SWP - German Institute for International and Security Affairs                                                                                      |        5|
 |University of Worcester                                                                                                                            |        5|
-|Häme University of Applied Sciences                                                                                                                |        4|
-|Metropolia University of Applied Sciences                                                                                                          |        4|
-|St.Gallen University of Teacher Education                                                                                                          |        4|
-|VATT Institute for Economic Research                                                                                                               |        4|
-|Arcada University of Applied Sciences                                                                                                              |        3|
+|Zurich University of the Arts                                                                                                                      |        5|
+|Medicines for Malaria Venture                                                                                                                      |        4|
+|Research Institute of Molecular Pathology - IMP                                                                                                    |        4|
+|TH Wildau                                                                                                                                          |        4|
+|Technological University of the Shannon: Midlands Midwest                                                                                          |        4|
+|University Psychiatric Services Bern                                                                                                               |        4|
+|University of Applied Sciences in Business Administration Zurich                                                                                   |        4|
+|University of Teacher Education Zug                                                                                                                |        4|
 |Carinthia University of Applied Sciences (CUAS)                                                                                                    |        3|
 |FH Campus Wien - University of Applied Sciences                                                                                                    |        3|
 |FH Vorarlberg - University of Applied Sciences                                                                                                     |        3|
-|Haaga-Helia University of Applied Sciences                                                                                                         |        3|
 |Institut für Arbeitsmarkt- und Berufsforschung                                                                                                     |        3|
-|Institute for Advanced Studies Vienna                                                                                                              |        3|
 |Medical Products Agency                                                                                                                            |        3|
+|Novia University of Applied Sciences                                                                                                               |        3|
+|Potsdam FH                                                                                                                                         |        3|
 |Public Health Agency of Sweden                                                                                                                     |        3|
-|Scottish Agricultural College (SRUC)                                                                                                               |        3|
-|Social Insurance Institution of Finland                                                                                                            |        3|
-|TH Wildau                                                                                                                                          |        3|
-|University of Liechtenstein                                                                                                                        |        3|
-|Zurich University of Teacher Education                                                                                                             |        3|
+|Pädagogische Hochschule Thurgau                                                                                                                    |        3|
+|Research Institute of Molecular Pathology (IMP) / IMBA - Institute of Molecular Biotechnology / Gregor Mendel Institute of Molecular Plant Biology |        3|
+|Tampere University of Applied Sciences                                                                                                             |        3|
+|University of Teacher Education in Special Needs                                                                                                   |        3|
 |FH Joanneum - University of Applied Sciences                                                                                                       |        2|
-|Finnish Food Authority                                                                                                                             |        2|
-|Hubrecht Institute for Developmental Biology and Stem Cell Resea                                                                                   |        2|
+|Haute Ecole Pédagogique du Valais                                                                                                                  |        2|
+|Haute École Pédagogique Fribourg                                                                                                                   |        2|
+|Hubrecht Institute for Developmental Biology and Stem Cell Research                                                                                |        2|
+|IRS                                                                                                                                                |        2|
 |Institute Mittag-Leffler                                                                                                                           |        2|
+|JAMK University of Applied Sciences                                                                                                                |        2|
+|Kalaidos University of Applied Sciences                                                                                                            |        2|
+|LAB University of Applied Sciences                                                                                                                 |        2|
+|Marie Cederschiöld University                                                                                                                      |        2|
+|Meertens Institute                                                                                                                                 |        2|
 |Modul University Vienna (MUVIENNA)                                                                                                                 |        2|
-|Novia University of Applied Sciences                                                                                                               |        2|
-|Pädagogische Hochschule Bern                                                                                                                       |        2|
+|Pädagogische Hochschule Graubünden                                                                                                                 |        2|
 |Rathenau Institute                                                                                                                                 |        2|
-|Research Institute of Molecular Pathology (IMP) / IMBA - Institute of Molecular Biotechnology / Gregor Mendel Institute of Molecular Plant Biology |        2|
-|Tampere University of Applied Sciences                                                                                                             |        2|
-|Turku University of Applied Sciences                                                                                                               |        2|
+|Schwyz University of Teacher Education                                                                                                             |        2|
+|Seinäjoki University of Applied Sciences                                                                                                           |        2|
+|Sophiahemmet University College                                                                                                                    |        2|
 |University Campus Suffolk                                                                                                                          |        2|
+|VAMK University of Applied Sciences                                                                                                                |        2|
 |AC2T Research GmbH                                                                                                                                 |        1|
-|Ferdinand Porsche FernFH                                                                                                                           |        1|
+|European Chemicals Agency                                                                                                                          |        1|
 |FH Kufstein Tirol - University of Applied Sciences                                                                                                 |        1|
 |FHWien der WKW (FHW)                                                                                                                               |        1|
+|Ferdinand Porsche FernFH                                                                                                                           |        1|
+|Finnish Defence Research Agency                                                                                                                    |        1|
 |Finnish Government                                                                                                                                 |        1|
-|Haute École Pédagogique Fribourg                                                                                                                   |        1|
-|Hochschule Hannover                                                                                                                                |        1|
-|International Institute of Social History (IISH)                                                                                                   |        1|
+|Haute École Pédagogique BEJUNE                                                                                                                     |        1|
 |IPN - Leibniz Kiel                                                                                                                                 |        1|
-|Laurea University of Applied Sciences                                                                                                              |        1|
-|Medical University of Innsbruck                                                                                                                    |        1|
-|Medicines for Malaria Venture                                                                                                                      |        1|
-|Meertens Institute                                                                                                                                 |        1|
-|Meertens Institute, Netherlands                                                                                                                    |        1|
+|Institute of Art, Design + Technology                                                                                                              |        1|
+|International Institute of Social History (IISH)                                                                                                   |        1|
+|Lapin ammattikorkeakoulu (fi)                                                                                                                      |        1|
 |Netherlands Institute for Advanced Study in the Humanities and Social Sciences (NIAS)                                                              |        1|
 |Oulu University of Applied Sciences                                                                                                                |        1|
-|Research Institute of Molecular Pathology (IMP) / IMBA - Institu                                                                                   |        1|
-|Royal Netherlands Academy of Arts and Sciences Bureau (KNAW Bure                                                                                   |        1|
-|Sophiahemmet University College                                                                                                                    |        1|
-|South-Eastern Finland University of Applied Sciences (Xamk)                                                                                        |        1|
+|Royal Netherlands Academy of Arts and Sciences Bureau (KNAW Bureau)                                                                                |        1|
+|The National Defence University                                                                                                                    |        1|
 |The Swedish Environmental Protection Agency                                                                                                        |        1|
 |University of Applied Sciences Burgenland                                                                                                          |        1|
-|University of Applied Sciences in Business Administration Zurich                                                                                   |        1|
-|University of Applied Sciences of the Grisons                                                                                                      |        1|
 |University of Applied Sciences Savonia                                                                                                             |        1|
 |University of Applied Sciences Wiener Neustadt for Business and Engineering                                                                        |        1|
-|University of Teacher Education Lucerne                                                                                                            |        1|
-|University of Teacher Education Zug                                                                                                                |        1|
-|VAMK University of Applied Sciences                                                                                                                |        1|
+
+
 
